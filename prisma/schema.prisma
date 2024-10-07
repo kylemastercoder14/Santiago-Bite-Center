@@ -1,0 +1,186 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String      @id @unique @default(cuid())
+  clerkId   String      @unique
+  firstName String
+  lastName  String
+  email     String      @unique
+  password  String?
+  imageUrl  String?
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  Patient   Patient[]
+  Medical   Medical[]
+  VitalSign VitalSign[]
+  Treatment Treatment[]
+
+  Appointment Appointment[]
+
+  Billing Billing[]
+}
+
+model Patient {
+  id            String   @id @unique @default(cuid())
+  age           String
+  sex           String
+  civilStatus   String
+  contactNumber String
+  nextKin       String
+  address       String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  medical Medical[] @relation("PatientMedical")
+
+  vitalSign VitalSign[] @relation("PatientVitalSign")
+
+  treatment Treatment[] @relation("PatientTreatment")
+}
+
+model Medical {
+  id            String   @id @unique @default(cuid())
+  illness       String
+  postSurgeries String
+  medication    String
+  dosage        String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  patients Patient[] @relation("PatientMedical")
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model VitalSign {
+  id            String   @id @unique @default(cuid())
+  temperature   Float
+  weight        Float
+  pulse         Float
+  respiration   Float
+  bloodPressure Float
+  lastIntake    String
+  lastOutput    String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  Patient Patient[] @relation("PatientVitalSign")
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model Treatment {
+  id                     String   @id @unique @default(cuid())
+  treatmentDate          String
+  biteCenter             String
+  tetanusToxoid          String
+  tetanusImmunuglobulin  String
+  tetanusSerum           String
+  antiRabiesSerum        String
+  chickEmbryoCellVaccine String
+  verocellRabiesVaccine  String
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  patient Patient[] @relation("PatientTreatment")
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model Branch {
+  id        String     @id @unique @default(cuid())
+  name      String
+  contact   String
+  address   String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  Employee  Employee[]
+}
+
+model Service {
+  id          String   @id @unique @default(cuid())
+  name        String
+  description String?
+  price       Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  billingItem BillingItem[]
+}
+
+model Employee {
+  id        String   @id @unique @default(cuid())
+  firstName String
+  lastName  String
+  email     String
+  password  String
+  imageUrl  String?
+  role      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  branchId  String
+  branch    Branch   @relation(fields: [branchId], references: [id])
+}
+
+model Appointment {
+  id         String   @id @unique @default(cuid())
+  date       String
+  time       String
+  status     String   @default("Pending")
+  firstDose  String? // day 0
+  secondDose String? // day 3
+  thirdDose  String? // day 7
+  fourthDose String? // day 21/28
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model Billing {
+  id           String   @id @unique @default(cuid())
+  date         String
+  time         String
+  forInsurance Boolean  @default(false)
+  forAics      Boolean  @default(false)
+  userCategory String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  billingItem BillingItem[]
+}
+
+model BillingItem {
+  id        String   @id @unique @default(cuid())
+  status    String   @default("Pending")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  serviceId String
+  service   Service @relation(fields: [serviceId], references: [id])
+
+  billingId String
+  billing   Billing @relation(fields: [billingId], references: [id])
+}
