@@ -27,10 +27,10 @@ model User {
   Medical   Medical[]
   VitalSign VitalSign[]
   Treatment Treatment[]
+  Incident  Incident[]
 
   Appointment Appointment[]
-
-  Billing Billing[]
+  Billing     Billing[]
 }
 
 model Patient {
@@ -47,11 +47,10 @@ model Patient {
   userId String
   user   User   @relation(fields: [userId], references: [id])
 
-  medical Medical[] @relation("PatientMedical")
-
+  medical   Medical[]   @relation("PatientMedical")
   vitalSign VitalSign[] @relation("PatientVitalSign")
-
   treatment Treatment[] @relation("PatientTreatment")
+  incident  Incident[]  @relation("PatientIncident")
 }
 
 model Medical {
@@ -101,6 +100,25 @@ model Treatment {
   updatedAt              DateTime @updatedAt
 
   patient Patient[] @relation("PatientTreatment")
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+}
+
+model Incident {
+  id                 String   @id @unique @default(cuid())
+  natureOfIncident   String
+  date               String
+  location           String
+  siteOfBite         String
+  bittingAnimal      String
+  actionTaken        String
+  clinicalImpression String
+  category           String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  patient Patient[] @relation("PatientIncident")
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
@@ -183,4 +201,14 @@ model BillingItem {
 
   billingId String
   billing   Billing @relation(fields: [billingId], references: [id])
+}
+
+model Inventory {
+  id        String   @id @unique @default(cuid())
+  name      String
+  stocks    Int
+  consumed  Int?
+  buffer    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

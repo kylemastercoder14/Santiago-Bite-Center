@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { E164Number } from "libphonenumber-js/core";
 import Image from "next/image";
-import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { Control } from "react-hook-form";
 import PhoneInput from "react-phone-number-input";
@@ -18,8 +17,14 @@ import { Input } from "./ui/input";
 import { Select, SelectContent, SelectTrigger, SelectValue } from "./ui/select";
 import { Textarea } from "./ui/textarea";
 import { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
+import { CalendarIcon, Eye, EyeOff } from "lucide-react";
 import SingleImageUpload from "./single-image-upload";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Button } from "./ui/button";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { DATE_DEFAULT_FORMAT, DATE_DISPLAY_FORMAT, DATE_YEAR_MIN } from "@/lib/validators";
+import { Calendar } from "./ui/custom-calendar";
 
 export enum FormFieldType {
   INPUT = "input",
@@ -74,6 +79,7 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
               type={props.type}
               placeholder={props.placeholder}
               {...field}
+              disabled={props.disabled}
               className="shad-input border-0 focus-visible:ring-offset-0 focus-visible:ring-0"
             />
           </FormControl>
@@ -187,25 +193,40 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
       );
     case FormFieldType.DATE_PICKER:
       return (
-        <div className="flex rounded-md border border-dark-500 bg-dark-400">
-          <Image
-            src="/icons/calendar.svg"
-            height={24}
-            width={24}
-            alt="user"
-            className="ml-2"
-          />
-          <FormControl>
-            <ReactDatePicker
-              showTimeSelect={props.showTimeSelect ?? false}
-              selected={field.value}
-              onChange={(date: Date | null, event) => field.onChange(date)}
-              timeInputLabel="Time:"
-              dateFormat={props.dateFormat ?? "MM/dd/yyyy"}
-              wrapperClassName="date-picker border-0 focus-visible:ring-offset-0 focus-visible:ring-0"
+        <Popover>
+          <PopoverTrigger asChild>
+            <FormControl>
+              <Button
+                variant={"outlineSecondary"}
+                className={cn(
+                  "flex w-full pl-2 justify-start font-normal focus-visible:ring-0 focus-visible:ring-offset-0 disabled:cursor-not-allowed",
+                  !field.value && "text-muted-foreground"
+                )}
+                disabled={props.disabled}
+              >
+                <CalendarIcon className="mr-4 h-4 w-4" />
+                {field.value ? (
+                  format(field.value, DATE_DISPLAY_FORMAT)
+                ) : (
+                  <span>Select a date</span>
+                )}
+              </Button>
+            </FormControl>
+          </PopoverTrigger>
+          <PopoverContent align="start" className=" w-auto p-0">
+            <Calendar
+              mode="single"
+              captionLayout="dropdown-buttons"
+              selected={field.value ? new Date(field.value) : undefined}
+              onSelect={(date) =>
+                date && field.onChange(format(date, DATE_DEFAULT_FORMAT))
+              }
+              fromYear={DATE_YEAR_MIN}
+              toYear={new Date().getFullYear()}
+              disabled={(date) => date > new Date()}
             />
-          </FormControl>
-        </div>
+          </PopoverContent>
+        </Popover>
       );
     case FormFieldType.SELECT:
       return (

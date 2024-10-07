@@ -47,6 +47,10 @@ const Navbar = () => {
       href: "/admin/dashboard/service",
       label: "Services",
     },
+    {
+      href: "/admin/dashboard/inventory",
+      label: "Inventory",
+    },
   ];
 
   const handleLogout = () => {

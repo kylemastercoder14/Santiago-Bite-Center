@@ -35,6 +35,7 @@ const TreatmentRegistration = async () => {
           <Link href="/complete-registration">General</Link>
           <Link href="/complete-registration/vital-signs">Vital Signs</Link>
           <Link href="/complete-registration/medical">Medical</Link>
+          <Link href="/complete-registration/incident">Incident</Link>
           <Link
             className="font-semibold text-primary"
             href="/complete-registration/treatment"

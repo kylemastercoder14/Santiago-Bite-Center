@@ -12,6 +12,7 @@ const PatientPage = async ({ params }: { params: { patientId: string } }) => {
       Medical: true,
       Patient: true,
       Treatment: true,
+      Incident: true,
     },
   });
   return (

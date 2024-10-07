@@ -3,6 +3,7 @@
 import { getUserById } from "@/app/hooks/get-user-by-id";
 import {
   GeneralFormValidators,
+  IncidentSignFormValidators,
   MedicalFormValidators,
   TreatmentFormValidators,
   VitalSignFormValidators,
@@ -245,6 +246,64 @@ export const createVitalSign = async (
   } catch (error: any) {
     return {
       error: `Failed to create vital sign. Please try again. ${
+        error.message || ""
+      }`,
+    };
+  }
+};
+
+export const createIncident = async (
+  values: z.infer<typeof IncidentSignFormValidators>
+) => {
+  const user = await currentUser();
+
+  const validatedField = IncidentSignFormValidators.safeParse(values);
+
+  if (!validatedField.success) {
+    const errors = validatedField.error.errors.map((err) => err.message);
+    return { error: `Validation Error: ${errors.join(", ")}` };
+  }
+
+  const {
+    natureOfIncident,
+    dateIncident,
+    placeOfIncident,
+    siteBite,
+    bittingAnimal,
+    actionTaken,
+    clinicalImpression,
+    category
+  } = validatedField.data;
+
+  const existingUser = await getUserById(user?.id as string);
+
+  if (!existingUser) {
+    return { error: "Unauthenticated" };
+  }
+
+  const existingPatient = await db.patient.findFirst({
+    where: { userId: existingUser.id },
+  });
+
+  try {
+    await db.incident.create({
+      data: {
+        natureOfIncident,
+        date: dateIncident,
+        location: placeOfIncident,
+        siteOfBite: siteBite,
+        bittingAnimal,
+        actionTaken,
+        clinicalImpression,
+        category,
+        userId: existingUser.id,
+        patient: { connect: { id: existingPatient?.id } },
+      },
+    });
+    return { success: "incident created successfully" };
+  } catch (error: any) {
+    return {
+      error: `Failed to create incident. Please try again. ${
         error.message || ""
       }`,
     };

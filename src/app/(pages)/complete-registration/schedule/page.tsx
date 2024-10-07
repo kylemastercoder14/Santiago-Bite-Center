@@ -33,6 +33,7 @@ const Schedule = async () => {
             Vital Signs
           </Link>
           <Link href="/complete-registration/medical">Medical</Link>
+          <Link href="/complete-registration/incident">Incident</Link>
           <Link href="/complete-registration/treatment">Treatment</Link>
           <Link href="/complete-registration/schedule" className="font-semibold text-primary">Schedule</Link>
         </nav>

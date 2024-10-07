@@ -45,8 +45,24 @@ export const EmployeeFormSchema = z.object({
   firstName: z.string().min(1, { message: "First name is required." }),
   lastName: z.string().min(1, { message: "Last name is required." }),
   email: z.string().min(1, { message: "Email address is required." }),
-  password: z.string().min(8, { message: "Password must be at least 8 characters." }),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters." }),
   imageUrl: z.string().optional(),
   role: z.string().min(1, { message: "Role is required." }),
   branch: z.string().min(1, { message: "Branch is required." }),
+});
+
+export const InventoryFormSchema = z.object({
+  name: z.string().min(1, { message: "Name is required." }),
+  stocks: z.coerce.number().min(1, { message: "Stocks is required." }),
+  buffer: z.coerce.number().min(1, { message: "Buffer is required." }),
+  consume: z.coerce.number().optional(),
+});
+
+export const AppointmentFormSchema = z.object({
+  name: z.string().min(1, { message: "Name is required." }),
+  forInsurance: z.string().optional(),
+  forAics: z.string().optional(),
+  userCategory: z.string().min(1, { message: "User category is required." }),
 });

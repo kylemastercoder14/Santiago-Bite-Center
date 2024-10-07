@@ -1,6 +1,13 @@
 "use client";
 
-import { Medical, Patient, Treatment, User, VitalSign } from "@prisma/client";
+import {
+  Incident,
+  Medical,
+  Patient,
+  Treatment,
+  User,
+  VitalSign,
+} from "@prisma/client";
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -15,6 +22,7 @@ interface PatientProfilingProps {
         Medical: Medical[];
         VitalSign: VitalSign[];
         Treatment: Treatment[];
+        Incident: Incident[];
       })
     | null;
 }
@@ -199,6 +207,46 @@ const PatientProfiling = ({ initialData }: PatientProfilingProps) => {
             </tbody>
           </table>
           <p className="font-bold text-md pl-2 w-full bg-[#839dbd]">
+            Incident History
+          </p>
+          {initialData?.Incident.map((item) => (
+            <>
+              <div key={item.id} className="flex items-center gap-2 px-3 pt-1">
+                <p className="font-semibold">NOI</p>
+                <p className="border-b border-black w-full">
+                  {item.natureOfIncident || "N/A"}
+                </p>
+              </div>
+              <div key={item.id} className="flex items-center gap-2 px-3 pt-1">
+                <p className="font-semibold">DOI</p>
+                <p className="border-b border-black w-full">
+                  {item.date || "N/A"}
+                </p>
+              </div>
+              <div key={item.id} className="flex items-center gap-2 px-3 pt-1">
+                <p className="font-semibold">POI</p>
+                <p className="border-b border-black w-full">
+                  {item.location || "N/A"}
+                </p>
+              </div>
+              <div key={item.id} className="flex items-center gap-2 px-3 pt-1">
+                <p className="font-semibold">SOB</p>
+                <p className="border-b border-black w-full">
+                  {item.siteOfBite || "N/A"}
+                </p>
+              </div>
+              <div
+                key={item.id}
+                className="flex items-center gap-2 px-3 mb-2 pt-1"
+              >
+                <p className="font-semibold w-40">Bitting Animals</p>
+                <p className="border-b border-black w-full">
+                  {item.bittingAnimal || "N/A"}
+                </p>
+              </div>
+            </>
+          ))}
+          <p className="font-bold text-md pl-2 w-full bg-[#839dbd]">
             Vital Signs
           </p>
           {initialData?.VitalSign.map((item) => (
@@ -239,7 +287,10 @@ const PatientProfiling = ({ initialData }: PatientProfilingProps) => {
                   {item.lastIntake || "N/A"}
                 </p>
               </div>
-              <div key={item.id} className="flex items-center gap-2 px-3 pt-1">
+              <div
+                key={item.id}
+                className="flex items-center gap-2 px-3 mb-2 pt-1"
+              >
                 <p className="font-semibold">LO</p>
                 <p className="border-b border-black w-full">
                   {item.lastOutput || "N/A"}
@@ -255,6 +306,26 @@ const PatientProfiling = ({ initialData }: PatientProfilingProps) => {
             fill
             className="w-full h-full"
           />
+        </div>
+      </div>
+      <div className="grid grid-cols-3 gap-5">
+        <div>
+          <p className="font-bold text-md pl-2 w-full bg-[#839dbd]">
+            Action/s Taken
+          </p>
+          <p className="px-2 py-2 border-r border-t border-b border-black">{initialData?.Incident[0].actionTaken}</p>
+        </div>
+        <div>
+          <p className="font-bold text-md pl-2 w-full bg-[#839dbd]">
+            Clinical Impression
+          </p>
+          <p className="px-2 py-2 border-r border-l border-t border-b border-black">{initialData?.Incident[0].clinicalImpression}</p>
+        </div>
+        <div>
+          <p className="font-bold text-md pl-2 w-full bg-[#839dbd]">
+            Diagnosis (Category)
+          </p>
+          <p className="px-2 py-2 border-l border-t border-b border-black">{initialData?.Incident[0].category}</p>
         </div>
       </div>
       <p className="font-bold text-md pl-2 w-full bg-[#839dbd]">

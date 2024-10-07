@@ -1,10 +1,10 @@
 import React from "react";
 import Link from "next/link";
-import GeneralCard from "@/features/profile/components/general-card";
 import db from "@/lib/db";
 import { currentUser } from "@clerk/nextjs/server";
+import IncidentCard from "@/features/profile/components/incident-card";
 
-const CompleteRegistration = async () => {
+const IncidentHistory = async () => {
   const user = await currentUser();
   let userData = null;
   if (user) {
@@ -15,7 +15,7 @@ const CompleteRegistration = async () => {
     });
   }
 
-  const patientData = await db.patient.findFirst({
+  const incidentData = await db.incident.findFirst({
     where: {
       userId: userData?.id,
     },
@@ -31,24 +31,28 @@ const CompleteRegistration = async () => {
           className="grid gap-4 text-sm text-muted-foreground"
           x-chunk="dashboard-04-chunk-0"
         >
-          <Link
-            href="/complete-registration"
-            className="font-semibold text-primary"
-          >
-            General
-          </Link>
+          <Link href="/complete-registration">General</Link>
           <Link href="/complete-registration/vital-signs">Vital Signs</Link>
           <Link href="/complete-registration/medical">Medical</Link>
-          <Link href="/complete-registration/incident">Incident</Link>
+          <Link
+            className="font-semibold text-primary"
+            href="/complete-registration/incident"
+          >
+            Incident
+          </Link>
           <Link href="/complete-registration/treatment">Treatment</Link>
           <Link href="/complete-registration/schedule">Schedule</Link>
         </nav>
         <div className="grid gap-6">
-          {patientData ? <GeneralCard patient={patientData} /> : <GeneralCard />}
+          {incidentData ? (
+            <IncidentCard incident={incidentData} />
+          ) : (
+            <IncidentCard />
+          )}
         </div>
       </div>
     </main>
   );
 };
 
-export default CompleteRegistration;
+export default IncidentHistory;

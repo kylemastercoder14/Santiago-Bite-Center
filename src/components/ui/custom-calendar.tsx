@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import * as React from "react";
@@ -34,7 +35,7 @@ function Calendar({
         caption_dropdowns: "flex justify-center gap-2 pr-2",
         nav: "space-x-1 flex items-center",
         nav_button: cn(
-          buttonVariants({ variant: "outline" }),
+          buttonVariants({ variant: "outlineSecondary" }),
           "h-7 w-7 bg-transparent p-0 hover:opacity-100"
         ),
         nav_button_previous: "absolute left-1",
@@ -60,7 +61,7 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        Dropdown: ({ value, onChange, children, ...props }: DropdownProps & { children?: React.ReactNode }) => {
+        Dropdown: ({ value, onChange, children, ...props }: DropdownProps) => {
           const options = React.Children.toArray(
             children
           ) as React.ReactElement<React.HTMLProps<HTMLOptionElement>>[];
