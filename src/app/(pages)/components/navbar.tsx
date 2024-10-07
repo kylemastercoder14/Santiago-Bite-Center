@@ -1,9 +1,8 @@
 import React from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import Link from "next/link";
-import { LuMenu, LuPackage2, LuSearch } from "react-icons/lu";
+import { LuMenu } from "react-icons/lu";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import UserButton from "@/features/auth/components/user-button";
 import { currentUser } from "@clerk/nextjs/server";
 import db from "@/lib/db";
@@ -33,7 +32,7 @@ const Navbar = async () => {
 
   return (
     <>
-      <div className="flex max-w-7xl py-5 mx-auto items-center">
+      <div className="lg:flex hidden max-w-7xl py-5 mx-auto items-center">
         <div className="flex items-center">
           <Image
             src="/images/logo.jpg"
@@ -63,7 +62,7 @@ const Navbar = async () => {
           height={200}
         />
       </div>
-      <header className="w-full bg-[#a41c24] border-t flex h-16 items-center gap-4 border-b justify-center px-[40px]">
+      <header className="w-full bg-[#a41c24] border-t flex z-50 h-16 items-center gap-4 border-b justify-center px-[40px]">
         <div className="flex items-center gap-5">
           <nav className="hidden w-full gap-40 text-sm font-medium md:flex items-center">
             <Link
@@ -96,18 +95,6 @@ const Navbar = async () => {
             >
               Our Doctors
             </Link>
-            <Link
-              href="#faqs"
-              className="text-white transition-colors hover:text-zinc-200"
-            >
-              FAQs
-            </Link>
-            <Link
-              href="#contact"
-              className="text-white transition-colors hover:text-zinc-200"
-            >
-              Contact Us
-            </Link>
             {userData ? (
               <UserButton
                 email={userData.email as string}
@@ -125,7 +112,7 @@ const Navbar = async () => {
               <Button
                 variant="outline"
                 size="icon"
-                className="shrink-0 md:hidden"
+                className="shrink-0 lg:hidden block"
               >
                 <LuMenu className="h-5 w-5" />
                 <span className="sr-only">Toggle navigation menu</span>
@@ -134,38 +121,34 @@ const Navbar = async () => {
             <SheetContent side="left">
               <nav className="grid gap-6 text-lg font-medium">
                 <Link
-                  href="#"
-                  className="flex items-center gap-2 text-lg font-semibold"
+                  href="/"
+                  className="text-white transition-colors hover:text-zinc-200"
                 >
-                  <LuPackage2 className="h-6 w-6" />
-                  <span className="sr-only">Acme Inc</span>
+                  Home
                 </Link>
                 <Link
-                  href="#"
-                  className="text-muted-foreground hover:text-foreground"
+                  href="#services"
+                  className="text-white transition-colors hover:text-zinc-200"
                 >
-                  Dashboard
+                  Services Offered
                 </Link>
                 <Link
-                  href="#"
-                  className="text-muted-foreground hover:text-foreground"
+                  href="/complete-registration"
+                  className="text-white transition-colors hover:text-zinc-200"
                 >
-                  Orders
+                  Appointment
                 </Link>
                 <Link
-                  href="#"
-                  className="text-muted-foreground hover:text-foreground"
+                  href="#about"
+                  className="text-white transition-colors hover:text-zinc-200"
                 >
-                  Products
+                  About Us
                 </Link>
                 <Link
-                  href="#"
-                  className="text-muted-foreground hover:text-foreground"
+                  href="#doctors"
+                  className="text-white transition-colors hover:text-zinc-200"
                 >
-                  Customers
-                </Link>
-                <Link href="#" className="hover:text-foreground">
-                  Settings
+                  Our Doctors
                 </Link>
               </nav>
             </SheetContent>

@@ -1,8 +1,12 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
-import { Calendar } from "lucide-react";
+import { Printer } from "lucide-react";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 const Topbar = () => {
+  const router = useRouter();
   return (
     <div className="px-4 mb-4 mt-2 pb-4">
       <div className="flex justify-between items-center p-0.5">
@@ -14,9 +18,9 @@ const Topbar = () => {
             Wednesday, 11th September 2024
           </span>
         </div>
-        <Button variant="outline">
-          <Calendar className="w-4 h-4 mr-2" />
-          Prev 6 Months
+        <Button onClick={() => router.push("/admin/print")} variant="outline">
+          <Printer className="w-4 h-4 mr-2" />
+          Print Report
         </Button>
       </div>
     </div>

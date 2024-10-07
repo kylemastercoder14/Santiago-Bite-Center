@@ -18,7 +18,7 @@ const StaffContainer = () => {
   }, []);
 
   return (
-    <div className="px-20 mt-5 grid grid-cols-4 gap-5">
+    <div className="px-20 mt-5 grid lg:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5">
       {staff.map((item) => (
         <div key={item.id} className="flex flex-col">
           {item.imageUrl ? (

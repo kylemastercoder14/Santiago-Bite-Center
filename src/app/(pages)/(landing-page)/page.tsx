@@ -19,7 +19,7 @@ export default function Home() {
   if (!isMounted) return null;
   return (
     <div className="w-full h-screen">
-      <div className="relative flex flex-col items-center justify-center h-[81vh]">
+      <div className="relative flex flex-col items-center justify-center lg:h-[81vh] h-screen">
         <div className="absolute inset-0">
           <Image
             src="/images/hero-bg.jpg"
@@ -30,7 +30,7 @@ export default function Home() {
             className="z-0"
           />
         </div>
-        <div className="relative -mt-20 px-40 z-10 text-center grid grid-cols-2 gap-60 text-white p-5">
+        <div className="relative lg:-mt-20 mt-10 lg:px-40 px-5 z-10 text-center grid lg:grid-cols-2 grid-cols-1 lg:gap-60 gap-10 text-white p-5">
           <Card>
             <CardContent className="p-10 flex items-center flex-col justify-center">
               <p className="text-5xl text-[#a41c24] font-bold">WELCOME!</p>
@@ -50,11 +50,11 @@ export default function Home() {
               >
                 Find A Doctor
               </Button>
-              <div className="flex items-center justify-center w-full gap-5">
+              <div className="flex items-center flex-wrap justify-center w-full lg:mt-0 mt-3 lg:gap-5 gap-3">
                 <Button
                   onClick={() => router.push("/complete-registration/schedule")}
                   size="xl"
-                  className="w-full mt-3"
+                  className="w-full lg:mt-3"
                   variant="outline"
                 >
                   Schedule An Appointment
@@ -62,7 +62,7 @@ export default function Home() {
                 <Button
                   onClick={() => router.push("/doctors")}
                   size="xl"
-                  className="w-full mt-3"
+                  className="w-full lg:mt-3"
                   variant="outline"
                 >
                   Contact Us
@@ -70,11 +70,11 @@ export default function Home() {
               </div>
             </CardContent>
           </Card>
-          <Card>
+          <Card className="bg-transparent border-0 shadow-none">
             <CardContent className="p-5 flex items-center flex-col justify-center">
-              <div className="w-[630px] rounded-lg h-[350px] relative">
+              <div className="lg:w-[630px] w-full rounded-lg h-[350px] relative">
                 <Image
-                  src="/images/hero-bg.jpg"
+                  src="/images/feature-bg.jpg"
                   alt="Background"
                   fill
                   className="w-full h-full rounded-lg"
@@ -84,12 +84,12 @@ export default function Home() {
                   <p className="text-white font-bold text-4xl">
                     We&apos;re here to listen.
                   </p>
-                  <p className="text-white font-semibold mt-1 text-sm">
+                  <p className="text-white font-semibold mt-1 text-sm px-16 lg:px-0">
                     Please help us improve your patient experience by clicking
                     this survey link. We value your feedback as we continue to
                     better the care that we provide to our patients.
                   </p>
-                  <Button className="mt-5" variant="outlineSecondary" size="xl">
+                  <Button className="mt-5 text-white" variant="outlineSecondary" size="xl">
                     Click Here
                   </Button>
                 </div>
@@ -100,62 +100,69 @@ export default function Home() {
         {/* Overlay */}
         <div className="absolute inset-0 bg-white opacity-40 z-1"></div>
       </div>
-      <div className="flex items-center justify-center gap-40 py-10 pt-20 mx-auto">
+      <div className="flex flex-wrap items-center justify-center lg:gap-40 gap-20 py-10 pt-20 mx-auto">
         <div className="flex flex-col items-center justify-center gap-5">
           <div className="bg-[#a41c24] rounded-full p-8">
-            <FaUsers className="text-white size-20" />
+            <FaUsers className="text-white lg:size-20 size-10" />
           </div>
-          <p className="font-semibold text-2xl text-[#a41c24]">
+          <p className="font-semibold lg:text-2xl text-md text-center text-[#a41c24]">
             Patient & Family Corner
           </p>
         </div>
         <div className="flex flex-col items-center justify-center gap-5">
           <div className="bg-[#a41c24] rounded-full p-8">
-            <RiHandHeartFill className="text-white size-20" />
+            <RiHandHeartFill className="text-white lg:size-20 size-10" />
           </div>
-          <p className="font-semibold text-2xl text-[#a41c24]">
+          <p className="font-semibold lg:text-2xl text-md text-center text-[#a41c24]">
             Expert & Quality Care
           </p>
         </div>
         <div className="flex flex-col items-center justify-center gap-5">
           <div className="bg-[#a41c24] rounded-full p-8">
-            <FaNewspaper className="text-white size-20" />
+            <FaNewspaper className="text-white lg:size-20 size-10" />
           </div>
-          <p className="font-semibold text-2xl text-[#a41c24]">
+          <p className="font-semibold lg:text-2xl text-md text-center text-[#a41c24]">
             Latest Announcements
           </p>
         </div>
         <div className="flex flex-col items-center justify-center gap-5">
           <div className="bg-[#a41c24] rounded-full p-8">
-            <FaHospital className="text-white size-20" />
+            <FaHospital className="text-white lg:size-20 size-10" />
           </div>
-          <p className="font-semibold text-2xl text-[#a41c24]">Good Facility</p>
+          <p className="font-semibold lg:text-2xl text-md text-center text-[#a41c24]">Good Facility</p>
         </div>
       </div>
-      <div className="flex items-start -mt-24 gap-5 px-20">
-        <div className="w-[40%] mt-80">
-          <Image src={`/images/santiago-text.jpg`}
-              alt="About"
-              height={300}
-              width={300}
-              className="mb-5 -ml-10"
-              draggable={false} />
-          <p className="text-5xl font-bold mb-2 text-[#a41c24]">
+      <div className="flex items-start flex-wrap -mt-24 gap-5 px-20">
+        <div className="lg:w-[40%] w-full lg:mt-80 mt-32">
+          <Image
+            src={`/images/santiago-text.jpg`}
+            alt="About"
+            height={300}
+            width={300}
+            className="mb-5 -ml-10"
+            draggable={false}
+          />
+          <p className="lg:text-5xl text-2xl font-bold mb-2 text-[#a41c24]">
             OUR COMMITMENT TO EXCELLENCE
           </p>
-          <p>
+          <p className="lg:text-md text-sm">
             What makes Santiago Animal Bite Center different from other
-            Facility? Our family-like environment. <span className="font-semibold text-[#a41c24]">“YOU are family”</span> does not
-            just tell our stakeholders that they are our patients or partners.
-            It shows that we are willing to go the extra mile, solve problems
-            together and put the family’s needs before our own. At SABC, every
-            patient is treated like a family member. Each one is guaranteed to
-            experience the best care and the warmth and dedication we give to
-            our own family.
+            Facility? Our family-like environment.{" "}
+            <span className="font-semibold text-[#a41c24]">
+              “YOU are family”
+            </span>{" "}
+            does not just tell our stakeholders that they are our patients or
+            partners. It shows that we are willing to go the extra mile, solve
+            problems together and put the family’s needs before our own. At
+            SABC, every patient is treated like a family member. Each one is
+            guaranteed to experience the best care and the warmth and dedication
+            we give to our own family.
           </p>
-          <Button className="mt-5" variant="destructive" size="lg">Learn More &rarr;</Button>
+          <Button className="mt-5" variant="destructive" size="lg">
+            Learn More &rarr;
+          </Button>
         </div>
-        <div className="w-[60%]">
+        <div className="lg:w-[60%] lg:mt-0 -mt-40 w-full">
           <ContainerScroll titleComponent>
             <Image
               src={`/images/hero.jpg`}
@@ -168,12 +175,26 @@ export default function Home() {
           </ContainerScroll>
         </div>
       </div>
-      <div id="services" className="-mt-40 py-10">
-        <p className="text-3xl font-bold mb-2 text-[#a41c24] text-center">SERVICES OFFERED</p>
-        <ServicesContainer />
+      <div id="about" className="-mt-40 py-10 grid lg:grid-cols-2 grid-cols-1">
+        <div id="services">
+          <p className="text-3xl font-bold mb-2 text-[#a41c24] text-center">
+            SERVICES OFFERED
+          </p>
+          <ServicesContainer />
+        </div>
+        <div className="relative w-full lg:h-full h-[500px]">
+          <Image
+            src="/images/about.jpg"
+            alt="About"
+            fill
+            className="w-full h-full object-center"
+          />
+        </div>
       </div>
-      <div id="doctors" className="mt-20 py-10">
-        <p className="text-3xl font-bold mb-2 text-[#a41c24] text-center">OUR STAFF</p>
+      <div id="doctors" className="lg:mt-20 mt-5 py-10">
+        <p className="text-3xl font-bold mb-2 text-[#a41c24] text-center">
+          OUR STAFF
+        </p>
         <StaffContainer />
       </div>
     </div>
