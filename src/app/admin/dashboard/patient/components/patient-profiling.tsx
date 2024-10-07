@@ -6,6 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
+import Image from "next/image";
 
 interface PatientProfilingProps {
   initialData:
@@ -25,186 +26,305 @@ const PatientProfiling = ({ initialData }: PatientProfilingProps) => {
   if (!initialData) return <p>No Profiling Found</p>;
 
   return (
-    <>
-      <p className="font-bold text-lg mb-2">General Information:</p>
-      <div className="flex items-center gap-3">
-        <div className="flex col-span-1 mr-5 items-center gap-2">
+    <div className="flex flex-col mx-auto border border-black max-w-7xl">
+      <p className="font-bold text-md pl-2 mb-2 w-full bg-[#839dbd]">
+        Patient Information
+      </p>
+      <div className="grid grid-cols-10 gap-3 w-full px-3 mb-2">
+        <div className="col-span-3 flex items-center gap-2">
           <p className="font-semibold">Name: </p>
-          <p>
+          <p className="border-b border-black w-full">
             {initialData?.firstName || "N/A"} {initialData?.lastName || "N/A"}
           </p>
         </div>
-        <div className="flex col-span-1 mr-5 items-center gap-2">
-          <p className="font-semibold">Email Address: </p>
-          <p>{initialData?.email || "N/A"}</p>
+        <div className="col-span-2 flex items-center gap-2">
+          <p className="font-semibold">Age: </p>
+          <p className="border-b border-black w-full">
+            {patient?.age + " years old" || "N/A"}
+          </p>
         </div>
-        <div className="flex col-span-1 mr-20 items-center gap-2">
-          <p className="font-semibold">Date Created: </p>
-          <p>
+        <div className="col-span-2 flex items-center gap-2">
+          <p className="font-semibold">Sex: </p>
+          <p className="border-b border-black w-full">
+            {patient?.sex || "N/A"}
+          </p>
+        </div>
+        <div className="col-span-3 flex items-center gap-2">
+          <p className="font-semibold w-32">Civil Status: </p>
+          <p className="border-b border-black w-full">
+            {patient?.civilStatus || "N/A"}
+          </p>
+        </div>
+      </div>
+      <div className="grid grid-cols-10 gap-3 w-full px-3 mb-2">
+        <div className="col-span-7 flex items-center gap-2">
+          <p className="font-semibold">Address: </p>
+          <p className="border-b border-black w-full">
+            {patient?.address || "N/A"}
+          </p>
+        </div>
+        <div className="col-span-3 flex items-center gap-2">
+          <p className="font-semibold w-36">Contact No.: </p>
+          <p className="border-b border-black w-full">
+            {patient?.contactNumber || "N/A"}
+          </p>
+        </div>
+      </div>
+      <div className="grid grid-cols-10 gap-3 w-full px-3 mb-3">
+        <div className="col-span-6 flex items-center gap-2">
+          <p className="font-semibold w-[108px]">Next of Kin: </p>
+          <p className="border-b border-black w-full">
+            {patient?.nextKin || "N/A"}
+          </p>
+        </div>
+        <div className="col-span-4 flex items-center gap-2">
+          <p className="font-semibold">Date/Time: </p>
+          <p className="border-b border-black w-full">
             {initialData?.createdAt
-              ? format(new Date(initialData.createdAt), "MMMM dd, yyyy")
+              ? format(
+                  new Date(initialData.createdAt),
+                  "MMMM dd, yyyy - h:mm a"
+                )
               : "N/A"}
           </p>
         </div>
-        <div className="flex items-center col-span-2 gap-2">
-          <p className="font-semibold">Address: </p>
-          <p>{patient?.address || "N/A"}</p>
+      </div>
+      <p className="font-bold text-md pl-2 w-full bg-[#839dbd]">
+        Medical History
+      </p>
+      <table className="border-b text-left border-black">
+        <thead className="border-black border-b">
+          <tr className="border-black border-b">
+            <th className="border-black border-r px-2 py-1">
+              Illness/Diagnosis
+            </th>
+            <th className="border-black border-r px-2 py-1">Post Surgeries</th>
+            <th className="border-black border-r px-2 py-1">
+              Prescribed Medication
+            </th>
+            <th className="px-2 py-1">Dosage</th>
+          </tr>
+        </thead>
+        <tbody>
+          {initialData?.Medical.map((item) => (
+            <tr key={item.id} className="border-b border-t border-black">
+              <td className="border-black border-r px-2 py-1">
+                {item?.illness || "N/A"}
+              </td>
+              <td className="border-black border-r px-2 py-1">
+                {item?.postSurgeries || "N/A"}
+              </td>
+              <td className="border-black border-r px-2 py-1">
+                {item?.medication || "N/A"}
+              </td>
+              <td className="px-2 py-1">{item?.dosage || "N/A"}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p className="font-bold text-md pl-2 w-full bg-[#839dbd]">
+        Treatment History
+      </p>
+      <div className="grid-cols-10 grid w-full gap-3">
+        <div className="col-span-5 border-r border-black">
+          <table className="border-black text-left border-b w-full">
+            <thead className="border-black border-b">
+              <tr className="border-black border-b">
+                <th className="px-2 py-1"></th>
+                <th className="border-black border-r border-l px-2 py-1">
+                  Date
+                </th>
+                <th className="border-black px-2 py-1">ABTC</th>
+              </tr>
+            </thead>
+            <tbody>
+              {initialData?.Treatment.map((item) => (
+                <>
+                  <tr key={item.id} className="border-b border-t border-black">
+                    <td className="px-2 py-1">TT</td>
+                    <td className="border-r border-black px-2 py-1 border-l">
+                      {item.treatmentDate || "N/A"}
+                    </td>
+                    <td className="border-black px-2 py-1 border-l">
+                      {item.tetanusToxoid || "N/A"}
+                    </td>
+                  </tr>
+                  <tr key={item.id} className="border-b border-t border-black">
+                    <td className="px-2 py-1">HTG</td>
+                    <td className="border-r border-black px-2 py-1 border-l">
+                      {item.treatmentDate || "N/A"}
+                    </td>
+                    <td className="border-black px-2 py-1 border-l">
+                      {item.chickEmbryoCellVaccine || "N/A"}
+                    </td>
+                  </tr>
+                  <tr key={item.id} className="border-b border-t border-black">
+                    <td className="px-2 py-1">ATS</td>
+                    <td className="border-black px-2 py-1 border-l">
+                      {item.treatmentDate || "N/A"}
+                    </td>
+                    <td className="border-black px-2 py-1 border-l">
+                      {item.antiRabiesSerum || "N/A"}
+                    </td>
+                  </tr>
+                  <tr key={item.id} className="border-b border-t border-black">
+                    <td className="px-2 py-1">ERIG</td>
+                    <td className="border-r border-black px-2 py-1 border-l">
+                      {item.treatmentDate || "N/A"}
+                    </td>
+                    <td className="border-black px-2 py-1 border-l">
+                      {item.tetanusImmunuglobulin || "N/A"}
+                    </td>
+                  </tr>
+                  <tr key={item.id} className="border-b border-t border-black">
+                    <td className="px-2 py-1">HRIG</td>
+                    <td className="border-r border-black px-2 py-1 border-l">
+                      {item.treatmentDate || "N/A"}
+                    </td>
+                    <td className="border-black px-2 py-1 border-l">
+                      {item.tetanusSerum || "N/A"}
+                    </td>
+                  </tr>
+                  <tr key={item.id} className="border-b border-t border-black">
+                    <td className="px-2 py-1">PCECV</td>
+                    <td className="border-r border-black px-2 py-1 border-l">
+                      {item.treatmentDate || "N/A"}
+                    </td>
+                    <td className="border-black px-2 py-1 border-l">
+                      {item.verocellRabiesVaccine || "N/A"}
+                    </td>
+                  </tr>
+                </>
+              ))}
+            </tbody>
+          </table>
+          <p className="font-bold text-md pl-2 w-full bg-[#839dbd]">
+            Vital Signs
+          </p>
+          {initialData?.VitalSign.map((item) => (
+            <>
+              <div key={item.id} className="flex items-center gap-2 px-3 pt-1">
+                <p className="font-semibold">BT</p>
+                <p className="border-b border-black w-full">
+                  {item.temperature || "N/A"} C
+                </p>
+              </div>
+              <div key={item.id} className="flex items-center gap-2 px-3 pt-1">
+                <p className="font-semibold w-24">B. Weight</p>
+                <p className="border-b border-black w-full">
+                  {item.weight || "N/A"} KG
+                </p>
+              </div>
+              <div key={item.id} className="flex items-center gap-2 px-3 pt-1">
+                <p className="font-semibold">RR</p>
+                <p className="border-b border-black w-full">
+                  {item.respiration || "N/A"}
+                </p>
+              </div>
+              <div key={item.id} className="flex items-center gap-2 px-3 pt-1">
+                <p className="font-semibold">PR</p>
+                <p className="border-b border-black w-full">
+                  {item.pulse || "N/A"}
+                </p>
+              </div>
+              <div key={item.id} className="flex items-center gap-2 px-3 pt-1">
+                <p className="font-semibold">BP</p>
+                <p className="border-b border-black w-full">
+                  {item.bloodPressure || "N/A"}
+                </p>
+              </div>
+              <div key={item.id} className="flex items-center gap-2 px-3 pt-1">
+                <p className="font-semibold">LI</p>
+                <p className="border-b border-black w-full">
+                  {item.lastIntake || "N/A"}
+                </p>
+              </div>
+              <div key={item.id} className="flex items-center gap-2 px-3 pt-1">
+                <p className="font-semibold">LO</p>
+                <p className="border-b border-black w-full">
+                  {item.lastOutput || "N/A"}
+                </p>
+              </div>
+            </>
+          ))}
+        </div>
+        <div className="col-span-5 flex items-center justify-center mx-auto flex-col relative w-full h-[500px]">
+          <Image
+            src="/images/profiling.png"
+            alt="Profiling"
+            fill
+            className="w-full h-full"
+          />
         </div>
       </div>
-      <div>
-        <p className="font-semibold">
-          Age: <span className="font-normal">{patient?.age || "N/A"}</span>
-        </p>
-        <p className="font-semibold">
-          Sex: <span className="font-normal">{patient?.sex || "N/A"}</span>
-        </p>
-        <p className="font-semibold">
-          Civil Status:{" "}
-          <span className="font-normal">{patient?.civilStatus || "N/A"}</span>
-        </p>
-        <p className="font-semibold">
-          Contact Number:{" "}
-          <span className="font-normal">{patient?.contactNumber || "N/A"}</span>
-        </p>
-        <p className="font-semibold">
-          Next of Kin: <span className="font-normal">{patient?.nextKin || "N/A"}</span>
-        </p>
+      <p className="font-bold text-md pl-2 w-full bg-[#839dbd]">
+        Vaccination Record
+      </p>
+      <div className="grid grid-cols-10 w-full gap-3">
+        <div className="col-span-3 px-2 py-2">
+          <p className="font-semibold">Tetanus</p>
+          <div className="flex items-center gap-2 ml-5 mt-2">
+            <p className="font-semibold">TT</p>
+            <p className="border border-black px-2 py-3 w-full"></p>
+          </div>
+          <div className="flex items-center gap-2 ml-5 mt-2">
+            <p className="font-semibold">HTIG</p>
+            <p className="border border-black px-2 py-3 w-full"></p>
+          </div>
+          <div className="flex items-center gap-2 ml-5 mt-2">
+            <p className="font-semibold">HRIG</p>
+            <p className="border border-black px-2 py-3 w-full"></p>
+          </div>
+          <p className="font-semibold mt-3">ARS</p>
+          <div className="flex items-center gap-2 ml-5 mt-2">
+            <p className="font-semibold">ERIG</p>
+            <p className="border border-black px-2 py-3 w-full"></p>
+          </div>
+          <div className="flex items-center gap-2 ml-5 mt-2">
+            <p className="font-semibold">HRIG</p>
+            <p className="border border-black px-2 py-3 w-full"></p>
+          </div>
+        </div>
+        <div className="col-span-7 w-full pl-2 py-2">
+          <p className="font-semibold mb-2">ARV</p>
+          <table className="border-t border-b border-l text-left border-black w-full">
+            <thead className="border-t border-b border-l border-black">
+              <tr>
+                <th></th>
+                <th className="border-t border-b border-l border-black py-1 px-2">
+                  Date
+                </th>
+                <th className="border-t border-b border-l border-black py-1 px-2">
+                  Dose
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="px-2">Day 0</td>
+                <td className="border border-black"></td>
+                <td className="border-l border-b border-black"></td>
+              </tr>
+              <tr>
+                <td className="px-2">Day 3</td>
+                <td className="border border-black"></td>
+                <td className="border-l border-b border-black"></td>
+              </tr>
+              <tr>
+                <td className="px-2">Day 7</td>
+                <td className="border border-black"></td>
+                <td className="border-l border-b border-black"></td>
+              </tr>
+              <tr>
+                <td className="px-2">Day 21/28</td>
+                <td className="border border-black"></td>
+                <td className="border-l border-b border-black"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <Separator />
-      <div>
-        <p className="font-bold text-lg mb-2">Vital Signs:</p>
-        <p className="font-semibold">
-          Temperature:{" "}
-          <span className="font-normal">{vitalSign?.temperature || "N/A"} C</span>
-        </p>
-        <p className="font-semibold">
-          Weight in KG: <span className="font-normal">{vitalSign?.weight || "N/A"}</span>
-        </p>
-        <p className="font-semibold">
-          Pulse: <span className="font-normal">{vitalSign?.pulse || "N/A"}</span>
-        </p>
-        <p className="font-semibold">
-          Respiration:{" "}
-          <span className="font-normal">{vitalSign?.respiration || "N/A"}</span>
-        </p>
-        <p className="font-semibold">
-          Blood Pressure:{" "}
-          <span className="font-normal">{vitalSign?.bloodPressure || "N/A"}</span>
-        </p>
-        <p className="font-semibold">
-          Last Intake:{" "}
-          <span className="font-normal">
-            {vitalSign?.lastIntake
-              ? format(new Date(vitalSign.lastIntake), "MMMM dd, yyyy")
-              : "N/A"}
-          </span>
-        </p>
-        <p className="font-semibold">
-          Last Output:{" "}
-          <span className="font-normal">
-            {vitalSign?.lastOutput
-              ? format(new Date(vitalSign.lastOutput), "MMMM dd, yyyy")
-              : "N/A"}
-          </span>
-        </p>
-      </div>
-      <Separator />
-      <div>
-        <p className="font-bold text-lg mb-2">Medical History:</p>
-        <p className="font-semibold">
-          Illness:{" "}
-          <span className="font-normal">
-            {initialData?.Medical?.length
-              ? initialData.Medical.map((item) => item.illness || "N/A").join(", ")
-              : "N/A"}
-          </span>
-        </p>
-        <p className="font-semibold">
-          Medications:{" "}
-          <span className="font-normal">
-            {initialData?.Medical?.length
-              ? initialData.Medical.map((item) => item.medication || "N/A").join(", ")
-              : "N/A"}
-          </span>
-        </p>
-        <p className="font-semibold">
-          Dosage:{" "}
-          <span className="font-normal">
-            {initialData?.Medical?.length
-              ? initialData.Medical.map((item) => item.dosage || "N/A").join(", ")
-              : "N/A"}
-          </span>
-        </p>
-        <p className="font-semibold">
-          Post Surgeries:{" "}
-          <span className="font-normal">
-            {initialData?.Medical?.length
-              ? initialData.Medical.map((item) => item.postSurgeries || "N/A").join(", ")
-              : "N/A"}
-          </span>
-        </p>
-      </div>
-      <Separator />
-      <div>
-        <p className="font-bold text-lg mb-2">Treatment History:</p>
-        <p className="font-semibold">
-          Treatment Date:{" "}
-          <span className="font-normal">
-            {initialData?.Treatment?.[0]?.treatmentDate || "N/A"}
-          </span>
-        </p>
-        <p className="font-semibold">
-          Animal Bite Center Facility:{" "}
-          <span className="font-normal">
-            {initialData?.Treatment?.[0]?.biteCenter || "N/A"}
-          </span>
-        </p>
-        <p className="font-semibold">
-          Tetanus Toxoid:{" "}
-          <span className="font-normal">
-            {initialData?.Treatment?.length
-              ? initialData.Treatment.map((item) => item.tetanusToxoid || "N/A").join(", ")
-              : "N/A"}
-          </span>
-        </p>
-        <p className="font-semibold">
-          Human Tetanus Immunoglobulin:{" "}
-          <span className="font-normal">
-            {initialData?.Treatment?.length
-              ? initialData.Treatment.map(
-                  (item) => item.tetanusImmunuglobulin || "N/A"
-                ).join(", ")
-              : "N/A"}
-          </span>
-        </p>
-        <p className="font-semibold">
-          Anti Tetanus Serum (ERIG/HRIG):{" "}
-          <span className="font-normal">
-            {initialData?.Treatment?.length
-              ? initialData.Treatment.map((item) => item.tetanusSerum || "N/A").join(", ")
-              : "N/A"}
-          </span>
-        </p>
-        <p className="font-semibold">
-          Anti Rabies Serum (ERIG/HRIG):{" "}
-          <span className="font-normal">
-            {initialData?.Treatment?.length
-              ? initialData.Treatment.map((item) => item.antiRabiesSerum || "N/A").join(", ")
-              : "N/A"}
-          </span>
-        </p>
-        <p className="font-semibold">
-          Purified Chick Embryo Cell Vaccine:{" "}
-          <span className="font-normal">
-            {initialData?.Treatment?.length
-              ? initialData.Treatment.map(
-                  (item) => item.chickEmbryoCellVaccine || "N/A"
-                ).join(", ")
-              : "N/A"}
-          </span>
-        </p>
-      </div>
-    </>
+    </div>
   );
 };
 

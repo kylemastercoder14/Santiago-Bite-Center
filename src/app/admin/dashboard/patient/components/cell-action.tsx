@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Copy, Edit, Eye, MoreHorizontal, PlusCircle, Trash } from "lucide-react";
+import { Copy, Eye, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -70,12 +70,6 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem
-            onClick={() => router.push(`/admin/dashboard/patient/${data.id}`)}
-          >
-            <PlusCircle className="w-4 h-4 mr-2" />
-            Add Service
-          </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() => router.push(`/admin/dashboard/patient/${data.id}`)}
           >
