@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -16,6 +16,7 @@ import { LuLoader } from "react-icons/lu";
 import { generateTimeSlots } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar-schedule";
 import { createAppointment } from "@/actions/appointment";
+import { getAllBranches } from "@/actions/branch";
 
 const ScheduleCard = ({ userId }: { userId: string }) => {
   const [pending, setIsPending] = useState(false);
@@ -39,7 +40,7 @@ const ScheduleCard = ({ userId }: { userId: string }) => {
       const response = await createAppointment(
         userId,
         date.toISOString(), // Converting date to ISO string
-        selectedTimeSlot || ""
+        selectedTimeSlot || "",
       );
 
       if ("error" in response) {

@@ -56,13 +56,13 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ initialData }) => {
     try {
       setIsLoading(true);
       if (!initialData) {
-        await createInventory(values).then((data) => {
+        await createInventory(values, params?.branchId as string).then((data) => {
           if (data.error) {
             toast.error(data.error);
           } else {
             toast.success(data.success);
-            router.push(`/admin/dashboard/inventory`);
-            window.location.assign("/admin/dashboard/inventory");
+            router.push(`/branch/${params.branchId}/inventory`);
+            window.location.assign(`/branch/${params.branchId}/inventory`);
           }
         });
       } else {
@@ -71,8 +71,8 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ initialData }) => {
             toast.error(data.error);
           } else {
             toast.success(data.success);
-            router.push(`/admin/dashboard/inventory`);
-            window.location.assign("/admin/dashboard/inventory");
+            router.push(`/branch/${params.branchId}/inventory`);
+            window.location.assign(`/branch/${params.branchId}/inventory`);
           }
         });
       }

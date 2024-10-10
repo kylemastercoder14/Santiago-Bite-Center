@@ -3,7 +3,6 @@
 import db from "@/lib/db";
 import { EmployeeFormSchema } from "@/lib/validators";
 import { z } from "zod";
-import bcryptjs from "bcryptjs";
 
 export const createEmployee = async (
   values: z.infer<typeof EmployeeFormSchema>
@@ -15,10 +14,8 @@ export const createEmployee = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { firstName, lastName, email, password, branch, role, imageUrl } =
+  const { firstName, lastName, email, branch, role, imageUrl } =
     validatedField.data;
-
-  const hashedPassword = bcryptjs.hashSync(password, 10);
 
   try {
     const employee = await db.employee.create({
@@ -26,7 +23,6 @@ export const createEmployee = async (
         firstName,
         lastName,
         email,
-        password: hashedPassword,
         branchId: branch,
         role,
         imageUrl,
@@ -57,7 +53,7 @@ export const updateEmployee = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { firstName, lastName, email, password, branch, role, imageUrl } =
+  const { firstName, lastName, email, branch, role, imageUrl } =
     validatedField.data;
 
   try {

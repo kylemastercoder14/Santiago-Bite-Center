@@ -11,6 +11,7 @@ export const GeneralFormValidators = z.object({
   province: z.string().min(1, { message: "Province is required." }),
   municipality: z.string().min(1, { message: "Municipality is required." }),
   barangay: z.string().min(1, { message: "Barangay is required." }),
+  branch: z.string().min(1, { message: "Branch is required." }),
 });
 
 export const MedicalFormValidators = z.object({

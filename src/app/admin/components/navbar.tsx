@@ -18,8 +18,10 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { CommandMenu } from "./command-menu";
+import { useClerk } from "@clerk/nextjs";
 
 const Navbar = () => {
+  const { signOut } = useClerk()
   const pathname = usePathname();
   const router = useRouter();
   const routes = [
@@ -28,36 +30,30 @@ const Navbar = () => {
       label: "Dashboard",
     },
     {
-      href: "/admin/dashboard/branch",
-      label: "Branches",
-    },
-    {
       href: "/admin/dashboard/patient",
       label: "Patients",
-    },
-    {
-      href: "/admin/dashboard/employee",
-      label: "Employee",
     },
     {
       href: "/admin/dashboard/appointment",
       label: "Appointments",
     },
     {
+      href: "/admin/dashboard/inventory",
+      label: "Inventory",
+    },
+    {
+      href: "/admin/dashboard/employee",
+      label: "Employee",
+    },
+    {
       href: "/admin/dashboard/service",
       label: "Services",
     },
     {
-      href: "/admin/dashboard/inventory",
-      label: "Inventory",
+      href: "/admin/dashboard/branch",
+      label: "Branches",
     },
   ];
-
-  const handleLogout = () => {
-    localStorage.removeItem("accessKey");
-    router.push("/admin");
-    toast.success("You have been logged out.");
-  };
   return (
     <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
@@ -123,10 +119,7 @@ const Navbar = () => {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Administrator</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Feedbacks</DropdownMenuItem>
-            <DropdownMenuItem>Messages</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout}>Logout</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => signOut({redirectUrl: "/admin"})}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

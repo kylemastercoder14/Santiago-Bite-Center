@@ -38,9 +38,11 @@ import { LuLoader } from "react-icons/lu";
 import { createPatient } from "@/actions/patients";
 import { useUser } from "@clerk/nextjs";
 import { Label } from "@/components/ui/label";
-import { Patient } from "@prisma/client";
+import { Branch, Patient } from "@prisma/client";
+import { getAllBranches } from "@/actions/branch";
 
 const GeneralCard = ({ patient }: { patient?: Patient }) => {
+  const [branchData, setBranchData] = useState<Branch[]>([]);
   const [pending, setIsPending] = useState(false);
   const router = useRouter();
   const { user, isLoaded } = useUser();
@@ -58,8 +60,17 @@ const GeneralCard = ({ patient }: { patient?: Patient }) => {
       province: "",
       municipality: "",
       barangay: "",
+      branch: "",
     },
   });
+
+  useEffect(() => {
+    const fetchBranches = async () => {
+      const response = await getAllBranches();
+      setBranchData(response);
+    };
+    fetchBranches();
+  }, []);
 
   const onSubmit = async (values: z.infer<typeof GeneralFormValidators>) => {
     setIsPending(true);
@@ -370,7 +381,40 @@ const GeneralCard = ({ patient }: { patient?: Patient }) => {
                 />
               </div>
             )}
-            <Button variant="destructive" disabled={pending || !!patient} type="submit">
+            <FormField
+              control={form.control}
+              name="branch"
+              disabled={pending || !!patient?.branchId}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Branch</FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={pending || !!patient?.branchId}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Branch" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {branchData.map((branch) => (
+                        <SelectItem key={branch.id} value={branch.id}>
+                          {branch.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button
+              variant="destructive"
+              disabled={pending || !!patient}
+              type="submit"
+            >
               {pending && <LuLoader className="size-4 animate-spin mr-2" />}
               Save Changes
             </Button>

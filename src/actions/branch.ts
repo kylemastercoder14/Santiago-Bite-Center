@@ -91,3 +91,7 @@ export const deleteBranch = async (branchId: string) => {
     };
   }
 };
+
+export const getAllBranches = async () => {
+  return await db.branch.findMany();
+};

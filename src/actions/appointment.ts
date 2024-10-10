@@ -20,7 +20,7 @@ type CreateAppointmentResponse =
 export const createAppointment = async (
   userId: string,
   date: string,
-  time: string
+  time: string,
 ): Promise<CreateAppointmentResponse> => {
   if (!userId) return { error: "User not found" };
   if (!date) return { error: "Date is required" };

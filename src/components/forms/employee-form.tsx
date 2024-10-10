@@ -44,7 +44,6 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ initialData, branch }) => {
       firstName: initialData?.firstName ?? "",
       lastName: initialData?.lastName ?? "",
       email: initialData?.email ?? "",
-      password: initialData?.password ?? "",
       role: initialData?.role ?? "",
       branch: initialData?.branchId ?? "",
       imageUrl: initialData?.imageUrl ?? "",
@@ -164,16 +163,6 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ initialData, branch }) => {
             placeholder="Enter Email Address"
             disabled={isLoading}
           />
-          {!initialData && (
-            <CustomFormField
-              control={form.control}
-              fieldType={FormFieldType.PASSWORD}
-              name="password"
-              label="Password"
-              placeholder="Enter Password"
-              disabled={isLoading}
-            />
-          )}
           <div className="grid grid-cols-2 gap-5">
             <CustomFormField
               control={form.control}
@@ -201,14 +190,14 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ initialData, branch }) => {
               <SelectItem value="Doctor">Doctor</SelectItem>
               <SelectItem value="Nurse">Nurse</SelectItem>
             </CustomFormField>
-            <CustomFormField
-              control={form.control}
-              fieldType={FormFieldType.UPLOAD}
-              name="imageUrl"
-              label="Image"
-              disabled={isLoading}
-             />
           </div>
+          <CustomFormField
+            control={form.control}
+            fieldType={FormFieldType.UPLOAD}
+            name="imageUrl"
+            label="Image"
+            disabled={isLoading}
+          />
           <SubmitButton className="ml-auto" isLoading={isLoading}>
             {action}
           </SubmitButton>

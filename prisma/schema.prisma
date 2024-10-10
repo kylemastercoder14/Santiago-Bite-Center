@@ -14,21 +14,21 @@ datasource db {
 }
 
 model User {
-  id        String      @id @unique @default(cuid())
-  clerkId   String      @unique
+  id        String   @id @unique @default(cuid())
+  clerkId   String   @unique
   firstName String
   lastName  String
-  email     String      @unique
+  email     String   @unique
   password  String?
   imageUrl  String?
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  Patient   Patient[]
-  Medical   Medical[]
-  VitalSign VitalSign[]
-  Treatment Treatment[]
-  Incident  Incident[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
+  Patient     Patient[]
+  Medical     Medical[]
+  VitalSign   VitalSign[]
+  Treatment   Treatment[]
+  Incident    Incident[]
   Appointment Appointment[]
   Billing     Billing[]
 }
@@ -46,6 +46,9 @@ model Patient {
 
   userId String
   user   User   @relation(fields: [userId], references: [id])
+
+  branchId String
+  branch   Branch @relation(fields: [branchId], references: [id])
 
   medical   Medical[]   @relation("PatientMedical")
   vitalSign VitalSign[] @relation("PatientVitalSign")
@@ -125,13 +128,16 @@ model Incident {
 }
 
 model Branch {
-  id        String     @id @unique @default(cuid())
+  id        String   @id @unique @default(cuid())
   name      String
   contact   String
   address   String
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
   Employee  Employee[]
+  Inventory Inventory[]
+  Patient   Patient[]
 }
 
 model Service {
@@ -150,7 +156,6 @@ model Employee {
   firstName String
   lastName  String
   email     String
-  password  String
   imageUrl  String?
   role      String
   createdAt DateTime @default(now())
@@ -192,7 +197,7 @@ model Billing {
 
 model BillingItem {
   id        String   @id @unique @default(cuid())
-  status    String   @default("Pending")
+  status    String   @default("Completed")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -211,4 +216,7 @@ model Inventory {
   buffer    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  branchId String
+  branch   Branch @relation(fields: [branchId], references: [id])
 }

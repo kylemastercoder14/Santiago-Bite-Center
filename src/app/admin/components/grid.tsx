@@ -10,7 +10,7 @@ const Grid = () => {
       <StatCard />
       <ActivityCard />
       <UsageRadar />
-      <RecentTransaction />
+      {/* <RecentTransaction /> */}
     </div>
   );
 };

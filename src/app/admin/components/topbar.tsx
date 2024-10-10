@@ -12,16 +12,16 @@ const Topbar = () => {
       <div className="flex justify-between items-center p-0.5">
         <div>
           <span className="text-lg font-bold block">
-            👋 Good morning, Kyle!
+            👋 Welcome back, Admin!
           </span>
           <span className="text-sm block text-muted-foreground">
-            Wednesday, 11th September 2024
+            This is the admin dashboard.
           </span>
         </div>
-        <Button onClick={() => router.push("/admin/print")} variant="outline">
+        {/* <Button onClick={() => router.push("/admin/print")} variant="outline">
           <Printer className="w-4 h-4 mr-2" />
           Print Report
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

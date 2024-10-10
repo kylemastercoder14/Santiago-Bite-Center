@@ -5,7 +5,8 @@ import { InventoryFormSchema } from "@/lib/validators";
 import { z } from "zod";
 
 export const createInventory = async (
-  values: z.infer<typeof InventoryFormSchema>
+  values: z.infer<typeof InventoryFormSchema>,
+  branchId: string
 ) => {
   const validatedField = InventoryFormSchema.safeParse(values);
 
@@ -22,6 +23,7 @@ export const createInventory = async (
         name,
         stocks,
         buffer,
+        branchId
       },
     });
 

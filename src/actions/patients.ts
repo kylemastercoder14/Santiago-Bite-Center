@@ -35,6 +35,7 @@ export const createPatient = async (
     province,
     municipality,
     barangay,
+    branch
   } = validatedField.data;
 
   const address = `${homeAddress}, ${barangay}, ${municipality}, ${province}, ${region}`;
@@ -55,6 +56,7 @@ export const createPatient = async (
         contactNumber,
         address,
         userId: existingUser.id,
+        branchId: branch
       },
     });
     return { success: "Patient created successfully" };
