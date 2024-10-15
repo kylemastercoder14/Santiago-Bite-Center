@@ -110,7 +110,7 @@ const AppointmentForm = ({
         userCategory: billing?.userCategory,
       });
     }
-  }, [initialData, fullName, form, billing, services]);
+  }, [initialData, fullName, form, billing, services, billingItems]);
 
   const onSubmit = async (values: z.infer<typeof AppointmentFormSchema>) => {
     console.log("services", selectedServices);
