@@ -13,7 +13,8 @@ import { currentUser } from "@clerk/nextjs/server";
 import { z } from "zod";
 
 export const createPatient = async (
-  values: z.infer<typeof GeneralFormValidators>
+  values: z.infer<typeof GeneralFormValidators>,
+  type?: string
 ) => {
   const user = await currentUser();
 
@@ -35,7 +36,7 @@ export const createPatient = async (
     province,
     municipality,
     barangay,
-    branch
+    branch,
   } = validatedField.data;
 
   const address = `${homeAddress}, ${barangay}, ${municipality}, ${province}, ${region}`;
@@ -55,8 +56,8 @@ export const createPatient = async (
         nextKin,
         contactNumber,
         address,
-        userId: existingUser.id,
-        branchId: branch
+        userId: type ? type : existingUser.id,
+        branchId: branch,
       },
     });
     return { success: "Patient created successfully" };
@@ -75,7 +76,8 @@ export const createMedicalHistory = async (
     postSurgeries: string;
     medication: string;
     dosage: string;
-  }[]
+  }[],
+  type?: string
 ) => {
   try {
     const user = await currentUser();
@@ -90,6 +92,10 @@ export const createMedicalHistory = async (
       where: { userId: existingUser.id },
     });
 
+    const existingPatientWalkIn = await db.patient.findFirst({
+      orderBy: { createdAt: "desc" },
+    });
+
     for (const history of medicalHistories) {
       // Check for existing records with the same details for the user
       const existingRecord = await db.medical.findFirst({
@@ -98,7 +104,10 @@ export const createMedicalHistory = async (
           postSurgeries: history.postSurgeries,
           medication: history.medication,
           dosage: history.dosage,
-          userId: existingUser.id,
+          userId:
+            type === "walk-in"
+              ? existingPatientWalkIn?.userId ?? ""
+              : existingUser.id ?? "",
         },
       });
 
@@ -121,7 +130,10 @@ export const createMedicalHistory = async (
             postSurgeries: history.postSurgeries,
             medication: history.medication,
             dosage: history.dosage,
-            userId: existingUser.id,
+            userId:
+              type === "walk-in"
+                ? existingPatientWalkIn?.userId ?? ""
+                : existingUser.id ?? "",
             patients: {
               connect: { id: existingPatient?.id },
             },
@@ -141,7 +153,8 @@ export const createMedicalHistory = async (
 };
 
 export const createTreatment = async (
-  values: z.infer<typeof TreatmentFormValidators>
+  values: z.infer<typeof TreatmentFormValidators>,
+  type?: string
 ) => {
   const user = await currentUser();
 
@@ -173,6 +186,10 @@ export const createTreatment = async (
     where: { userId: existingUser.id },
   });
 
+  const existingPatientWalkIn = await db.patient.findFirst({
+    orderBy: { createdAt: "desc" },
+  });
+
   try {
     await db.treatment.create({
       data: {
@@ -184,11 +201,16 @@ export const createTreatment = async (
         antiRabiesSerum,
         chickEmbryoCellVaccine,
         verocellRabiesVaccine,
-        userId: existingUser.id,
+        userId:
+          type === "walk-in"
+            ? existingPatientWalkIn?.userId ?? ""
+            : existingUser.id ?? "",
         patient: { connect: { id: existingPatient?.id } },
       },
     });
-    return { success: "Treatment history created successfully" };
+
+    const userId = type === "walk-in" ? existingPatientWalkIn?.userId : existingUser.id;
+    return { success: "Treatment history created successfully", userId };
   } catch (error: any) {
     return {
       error: `Failed to create treatment history. Please try again. ${
@@ -199,7 +221,8 @@ export const createTreatment = async (
 };
 
 export const createVitalSign = async (
-  values: z.infer<typeof VitalSignFormValidators>
+  values: z.infer<typeof VitalSignFormValidators>,
+  type?: string
 ) => {
   const user = await currentUser();
 
@@ -222,6 +245,10 @@ export const createVitalSign = async (
 
   const existingUser = await getUserById(user?.id as string);
 
+  const existingPatientWalkIn = await db.patient.findFirst({
+    orderBy: { createdAt: "desc" },
+  });
+
   if (!existingUser) {
     return { error: "Unauthenticated" };
   }
@@ -240,8 +267,11 @@ export const createVitalSign = async (
         bloodPressure,
         lastIntake,
         lastOutput,
-        userId: existingUser.id,
-        Patient: { connect: { id: existingPatient?.id } },
+        userId:
+          type === "walk-in"
+            ? existingPatientWalkIn?.userId ?? ""
+            : existingUser.id ?? "",
+        Patient: { connect: { id: existingPatient?.id ?? "" } },
       },
     });
     return { success: "Vital sign created successfully" };
@@ -255,7 +285,8 @@ export const createVitalSign = async (
 };
 
 export const createIncident = async (
-  values: z.infer<typeof IncidentSignFormValidators>
+  values: z.infer<typeof IncidentSignFormValidators>,
+  type?: string
 ) => {
   const user = await currentUser();
 
@@ -274,10 +305,14 @@ export const createIncident = async (
     bittingAnimal,
     actionTaken,
     clinicalImpression,
-    category
+    category,
   } = validatedField.data;
 
   const existingUser = await getUserById(user?.id as string);
+
+  const existingPatientWalkIn = await db.patient.findFirst({
+    orderBy: { createdAt: "desc" },
+  });
 
   if (!existingUser) {
     return { error: "Unauthenticated" };
@@ -298,7 +333,10 @@ export const createIncident = async (
         actionTaken,
         clinicalImpression,
         category,
-        userId: existingUser.id,
+        userId:
+          type === "walk-in"
+            ? existingPatientWalkIn?.userId ?? ""
+            : existingUser.id ?? "",
         patient: { connect: { id: existingPatient?.id } },
       },
     });

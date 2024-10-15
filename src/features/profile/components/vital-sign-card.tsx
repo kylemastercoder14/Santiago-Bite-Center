@@ -56,7 +56,7 @@ const VitalSignCard = ({ vitalSign }: { vitalSign?: VitalSign }) => {
       weight: vitalSign?.weight ?? 0,
       pulse: vitalSign?.pulse ?? 0,
       respiration: vitalSign?.respiration ?? 0,
-      bloodPressure: vitalSign?.bloodPressure ?? 0,
+      bloodPressure: vitalSign?.bloodPressure ?? "",
       lastIntake: vitalSign?.lastIntake ?? "",
       lastOutput: vitalSign?.lastOutput ?? "",
     },
@@ -182,8 +182,7 @@ const VitalSignCard = ({ vitalSign }: { vitalSign?: VitalSign }) => {
                     <FormLabel>Blood Pressure</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Enter Blood Pressure"
-                        type="number"
+                        placeholder="Enter Blood Pressure (e.g: 120/80)"
                         {...field}
                       />
                     </FormControl>

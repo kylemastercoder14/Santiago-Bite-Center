@@ -26,10 +26,10 @@ const Navbar = () => {
   const router = useRouter();
   const params = useParams();
   const routes = [
-    {
-      href: `/branch/${params.branchId}/overview`, // Add leading slash
-      label: "Dashboard",
-    },
+    // {
+    //   href: `/branch/${params.branchId}/overview`, // Add leading slash
+    //   label: "Dashboard",
+    // },
     {
       href: `/branch/${params.branchId}/patient`, // Add leading slash
       label: "Patients",
@@ -56,7 +56,7 @@ const Navbar = () => {
     <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
         <Link href="#" className="flex items-center justify-center">
-          <Image src="/images/logo.jpg" alt="Logo" width={320} height={320} />
+          <Image src="/images/logo.jpg" alt="Logo" width={200} height={200} />
         </Link>
 
         {routes.map((route) => (

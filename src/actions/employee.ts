@@ -3,6 +3,7 @@
 import db from "@/lib/db";
 import { EmployeeFormSchema } from "@/lib/validators";
 import { z } from "zod";
+import bcryptjs from "bcryptjs";
 
 export const createEmployee = async (
   values: z.infer<typeof EmployeeFormSchema>
@@ -17,12 +18,16 @@ export const createEmployee = async (
   const { firstName, lastName, email, branch, role, imageUrl } =
     validatedField.data;
 
+  const password = "Santiagobitecenter2024@";
+  const hashedPassword = await bcryptjs.hash(password, 10);
+
   try {
     const employee = await db.employee.create({
       data: {
         firstName,
         lastName,
         email,
+        password: hashedPassword,
         branchId: branch,
         role,
         imageUrl,

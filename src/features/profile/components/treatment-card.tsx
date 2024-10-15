@@ -58,7 +58,7 @@ const TreatmentCard = ({ treatment }: { treatment?: Treatment }) => {
       tetanusSerum: treatment?.tetanusSerum || "",
       antiRabiesSerum: treatment?.antiRabiesSerum || "",
       chickEmbryoCellVaccine: treatment?.chickEmbryoCellVaccine || "",
-      verocellRabiesVaccine: treatment?.verocellRabiesVaccine,
+      verocellRabiesVaccine: treatment?.verocellRabiesVaccine || "",
     },
   });
 

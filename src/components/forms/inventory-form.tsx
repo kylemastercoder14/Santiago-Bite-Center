@@ -2,9 +2,9 @@
 
 import { InventoryFormSchema } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Inventory } from "@prisma/client";
+import { Branch, Inventory } from "@prisma/client";
 import { useParams, useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import AlertModal from "../alert-modal";
@@ -28,16 +28,17 @@ import {
   deleteInventory,
   updateInventory,
 } from "@/actions/inventory";
+import { getAllBranches } from "@/actions/branch";
 
 interface InventoryFormProps {
   initialData: Inventory | null;
 }
 
 const InventoryForm: React.FC<InventoryFormProps> = ({ initialData }) => {
+  const [branchData, setBranchData] = useState<Branch[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [inventoryId, setInventoryId] = useState(initialData?.id ?? "");
   const [open, setOpen] = useState(false);
-  const params = useParams();
   const router = useRouter();
   const title = initialData ? "Edit Vaccine" : "Add Vaccine";
   const description = initialData ? "Edit a vaccine" : "Add a new vaccine";
@@ -49,20 +50,29 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ initialData }) => {
       stocks: initialData?.stocks ?? 0,
       buffer: initialData?.buffer ?? 0,
       consume: initialData?.consumed ?? 0,
+      branch: initialData?.branchId ?? "",
     },
   });
+
+  useEffect(() => {
+    const fetchBranches = async () => {
+      const response = await getAllBranches();
+      setBranchData(response);
+    };
+    fetchBranches();
+  }, []);
 
   const onSubmit = async (values: z.infer<typeof InventoryFormSchema>) => {
     try {
       setIsLoading(true);
       if (!initialData) {
-        await createInventory(values, params?.branchId as string).then((data) => {
+        await createInventory(values).then((data) => {
           if (data.error) {
             toast.error(data.error);
           } else {
             toast.success(data.success);
-            router.push(`/branch/${params.branchId}/inventory`);
-            window.location.assign(`/branch/${params.branchId}/inventory`);
+            router.push(`/admin/dashboard/inventory`);
+            window.location.assign("/admin/dashboard/inventory");
           }
         });
       } else {
@@ -71,8 +81,8 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ initialData }) => {
             toast.error(data.error);
           } else {
             toast.success(data.success);
-            router.push(`/branch/${params.branchId}/inventory`);
-            window.location.assign(`/branch/${params.branchId}/inventory`);
+            router.push(`/admin/dashboard/inventory`);
+            window.location.assign("/admin/dashboard/inventory");
           }
         });
       }
@@ -175,6 +185,20 @@ const InventoryForm: React.FC<InventoryFormProps> = ({ initialData }) => {
             placeholder="Enter Buffer"
             disabled={isLoading}
           />
+          <CustomFormField
+            control={form.control}
+            fieldType={FormFieldType.SELECT}
+            name="branch"
+            label="Branch"
+            placeholder="Select Branch"
+            disabled={isLoading}
+          >
+            {branchData.map((branch) => (
+              <SelectItem key={branch.id} value={branch.id}>
+                {branch.name}
+              </SelectItem>
+            ))}
+          </CustomFormField>
           <SubmitButton className="ml-auto" isLoading={isLoading}>
             {action}
           </SubmitButton>

@@ -95,3 +95,11 @@ export const deleteBranch = async (branchId: string) => {
 export const getAllBranches = async () => {
   return await db.branch.findMany();
 };
+
+export const getBranchById = async (id: string) => {
+  return await db.branch.findUnique({
+    where: {
+      id,
+    },
+  });
+};

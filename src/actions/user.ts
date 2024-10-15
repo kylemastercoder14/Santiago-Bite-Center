@@ -23,3 +23,22 @@ export const createUser = async (
   });
   return { success: "User created successfully." };
 };
+
+export const createWalkInPatient = async (
+  email: string,
+  familyName: string,
+  givenName: string,
+) => {
+  if (!email || !familyName || !givenName) {
+    return { error: "All fields are required." };
+  }
+
+  const data = await db.user.create({
+    data: {
+      email,
+      firstName: givenName,
+      lastName: familyName,
+    },
+  });
+  return { success: "User created successfully.", userId: data.id };
+};

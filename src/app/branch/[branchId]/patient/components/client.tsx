@@ -23,6 +23,7 @@ const PatientClient: React.FC<PatientClientProps> = ({ data }) => {
           title={`Patients (${data.length})`}
           description="Manage patients for your facility."
         />
+        <Button variant="destructive" onClick={() => router.push(`/branch/${params.branchId}/patient/new`)}>+ Add New Patient</Button>
       </div>
       <Separator />
       <DataTable searchKey="name" columns={columns} data={data} />

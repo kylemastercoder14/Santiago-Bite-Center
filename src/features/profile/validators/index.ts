@@ -1,6 +1,9 @@
 import { z } from "zod";
 
 export const GeneralFormValidators = z.object({
+  email: z.string().optional(),
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
   age: z.string().min(1, { message: "Age is required." }),
   sex: z.string().min(1, { message: "Sex is required." }),
   civilStatus: z.string().min(1, { message: "Civil status is required." }),
@@ -24,22 +27,14 @@ export const MedicalFormValidators = z.object({
 });
 
 export const TreatmentFormValidators = z.object({
-  treatmentDate: z.string().min(1, { message: "Treatment date is required." }),
-  biteCenter: z.string().min(1, { message: "Bite center is required." }),
-  tetanusToxoid: z.string().min(1, { message: "Tetanus toxoid is required." }),
-  tetanusImmunuglobulin: z
-    .string()
-    .min(1, { message: "Tetanus immunuglobulin is required." }),
-  tetanusSerum: z.string().min(1, { message: "Tetanus serum is required." }),
-  antiRabiesSerum: z
-    .string()
-    .min(1, { message: "Anti rabies serum is required." }),
-  chickEmbryoCellVaccine: z
-    .string()
-    .min(1, { message: "Chick embryo cell vaccine is required." }),
-  verocellRabiesVaccine: z
-    .string()
-    .min(1, { message: "Verocell rabies vaccine is required." }),
+  treatmentDate: z.string().optional(),
+  biteCenter: z.string().optional(),
+  tetanusToxoid: z.string().optional(),
+  tetanusImmunuglobulin: z.string().optional(),
+  tetanusSerum: z.string().optional(),
+  antiRabiesSerum: z.string().optional(),
+  chickEmbryoCellVaccine: z.string().optional(),
+  verocellRabiesVaccine: z.string().optional(),
 });
 
 export const VitalSignFormValidators = z.object({
@@ -52,7 +47,7 @@ export const VitalSignFormValidators = z.object({
     .number()
     .min(1, { message: "Respiration is required." }),
   bloodPressure: z.coerce
-    .number()
+    .string()
     .min(1, { message: "Blood pressure is required." }),
   lastIntake: z.string().min(1, { message: "Last intake is required." }),
   lastOutput: z.string().min(1, { message: "Last output is required." }),

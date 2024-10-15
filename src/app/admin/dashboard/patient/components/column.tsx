@@ -10,6 +10,7 @@ export type PatientColumn = {
   age: string;
   sex: string;
   address: string;
+  adminBranch: string;
   contact: string;
   createdAt: string;
 };
@@ -38,6 +39,10 @@ export const columns: ColumnDef<PatientColumn>[] = [
   {
     accessorKey: "address",
     header: "Address",
+  },
+  {
+    accessorKey: "adminBranch",
+    header: "Branch",
   },
   {
     accessorKey: "createdAt",

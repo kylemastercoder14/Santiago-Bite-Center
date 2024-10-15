@@ -21,6 +21,15 @@ import {
 import { Button } from "./button";
 import { Input } from "@/components/ui/input";
 import React from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./select";
+import { getAllBranches } from "@/actions/branch";
+import { Branch } from "@prisma/client";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -36,6 +45,9 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+
+  const [branches, setBranches] = React.useState("");
+  const [branchesData, setBranchesData] = React.useState<Branch[]>([]);
   const table = useReactTable({
     data,
     columns,
@@ -48,9 +60,22 @@ export function DataTable<TData, TValue>({
     },
   });
 
+  React.useEffect(() => {
+    const fetchBranches = async () => {
+      const response = await getAllBranches();
+      setBranchesData(response);
+    };
+    fetchBranches();
+  }, []);
+
+  const handleBranchChange = (branch: string) => {
+    setBranches(branch);
+    table.getColumn("adminBranch")?.setFilterValue(branch);
+  };
+
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex justify-between items-center py-4">
         <Input
           placeholder="Search..."
           value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
@@ -59,6 +84,21 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
+
+        {table.getColumn("adminBranch") && (
+          <Select defaultValue={branches} onValueChange={handleBranchChange}>
+            <SelectTrigger className="w-[300px] border border-input!important">
+              <SelectValue placeholder="All Branches" />
+            </SelectTrigger>
+            <SelectContent>
+              {branchesData.map((branch) => (
+                <SelectItem key={branch.id} value={branch.name}>
+                  {branch.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
       </div>
       <div className="rounded-md border">
         <Table>

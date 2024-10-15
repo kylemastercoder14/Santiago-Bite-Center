@@ -5,8 +5,7 @@ import { InventoryFormSchema } from "@/lib/validators";
 import { z } from "zod";
 
 export const createInventory = async (
-  values: z.infer<typeof InventoryFormSchema>,
-  branchId: string
+  values: z.infer<typeof InventoryFormSchema>
 ) => {
   const validatedField = InventoryFormSchema.safeParse(values);
 
@@ -15,7 +14,7 @@ export const createInventory = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { name, stocks, buffer } = validatedField.data;
+  const { name, stocks, buffer, branch } = validatedField.data;
 
   try {
     const inventory = await db.inventory.create({
@@ -23,7 +22,7 @@ export const createInventory = async (
         name,
         stocks,
         buffer,
-        branchId
+        branchId: branch
       },
     });
 

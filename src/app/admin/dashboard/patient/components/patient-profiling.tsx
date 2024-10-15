@@ -35,11 +35,109 @@ interface PatientProfilingProps {
   billingData: BillingWithService[];
 }
 
-const PatientProfiling = ({ initialData, billingData }: PatientProfilingProps) => {
+const PatientProfiling = ({
+  initialData,
+  billingData,
+}: PatientProfilingProps) => {
   const patient = initialData?.Patient?.[0];
   const vitalSign = initialData?.VitalSign?.[0];
 
   if (!initialData) return <p>No Profiling Found</p>;
+
+  const renderProfilingImage = () => {
+    switch (initialData.Incident[0].siteOfBite.toLowerCase()) {
+      case "head":
+        return (
+          <Image
+            src="/images/profiling-head.png"
+            alt="Profiling Head"
+            fill
+            className="w-full h-full object-contain"
+          />
+        );
+      case "neck":
+        return (
+          <Image
+            src="/images/profiling-head.png"
+            alt="Profiling Head"
+            fill
+            className="w-full h-full object-contain"
+          />
+        );
+      case "shoulder":
+        return (
+          <Image
+            src="/images/profiling-shoulder.png"
+            alt="Profiling Shoulder"
+            fill
+            className="w-full h-full object-contain"
+          />
+        );
+      case "arm":
+        return (
+          <Image
+            src="/images/arm-profiling.png"
+            alt="Profiling Arm"
+            fill
+            className="w-full h-full object-contain"
+          />
+        );
+      case "arms":
+        return (
+          <Image
+            src="/images/arm-profiling.png"
+            alt="Profiling Arm"
+            fill
+            className="w-full h-full object-contain"
+          />
+        );
+      case "back":
+        return (
+          <Image
+            src="/images/arm-profiling.png"
+            alt="Profiling Arm"
+            fill
+            className="w-full h-full object-contain"
+          />
+        );
+      case "chest":
+        return (
+          <Image
+            src="/images/arm-profiling.png"
+            alt="Profiling Arm"
+            fill
+            className="w-full h-full object-contain"
+          />
+        );
+      case "legs":
+        return (
+          <Image
+            src="/images/profiling-legs.png"
+            alt="Profiling Legs"
+            fill
+            className="w-full h-full object-contain"
+          />
+        );
+      case "leg":
+        return (
+          <Image
+            src="/images/profiling-legs.png"
+            alt="Profiling Legs"
+            fill
+            className="w-full h-full object-contain"
+          />
+        );
+      default:
+        return (
+          <Image
+            src="/images/profiling.png"
+            alt="Default Profiling"
+            fill
+            className="w-full h-full object-contain"
+          />
+        );
+    }
+  };
 
   return (
     <div className="flex flex-col mx-auto border border-black max-w-7xl">
@@ -308,12 +406,7 @@ const PatientProfiling = ({ initialData, billingData }: PatientProfilingProps) =
           ))}
         </div>
         <div className="col-span-5 flex items-center justify-center mx-auto flex-col relative w-full h-[500px]">
-          <Image
-            src="/images/profiling.png"
-            alt="Profiling"
-            fill
-            className="w-full h-full"
-          />
+          {renderProfilingImage()}
         </div>
       </div>
       <div className="grid grid-cols-3 gap-5">
@@ -389,8 +482,8 @@ const PatientProfiling = ({ initialData, billingData }: PatientProfilingProps) =
             <tbody>
               <tr>
                 <td className="px-2">Day 0</td>
-                <td className="border px-2 border-black">{format(billingData[0]?.createdAt, "MMMM do, yyyy")}</td>
-                <td className="border-l px-2 border-b border-black">{billingData[0].service?.name}</td>
+                {/* <td className="border px-2 border-black">{format(billingData[0]?.createdAt, "MMMM do, yyyy") ?? "N/A"}</td> */}
+                {/* <td className="border-l px-2 border-b border-black">{billingData[0].service?.name ?? "N/A"}</td> */}
               </tr>
               <tr>
                 <td className="px-2">Day 3</td>

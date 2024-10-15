@@ -68,7 +68,6 @@ const MedicalCard = ({ medical }: { medical?: Medical[] }) => {
           toast.error(data.error);
         } else {
           router.push("/complete-registration/treatment");
-          toast.success(data?.success);
         }
       });
     } catch (error) {

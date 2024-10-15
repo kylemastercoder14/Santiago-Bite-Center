@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import AlertModal from "@/components/alert-modal";
 import { deleteBranch } from "@/actions/branch";
+import { deleteInventory } from "@/actions/inventory";
 
 interface CellActionProps {
   data: InventoryColumn;
@@ -34,18 +35,18 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onDelete = async () => {
     try {
       setIsLoading(true);
-      await deleteBranch(data.id).then((data) => {
+      await deleteInventory(data.id).then((data) => {
         if (data.error) {
           toast.error(data.error);
         } else {
           toast.success(data.success);
-          router.push(`/admin/dashboard/employee`);
-          window.location.assign("/admin/dashboard/employee");
+          router.push(`/admin/dashboard/inventory`);
+          window.location.assign("/admin/dashboard/inventory");
         }
       });
     } catch (error) {
       toast.error(
-        "Something went wrong while deleting the employee. Please try again later."
+        "Something went wrong while deleting the inventory. Please try again later."
       );
       console.log(error);
     } finally {
@@ -71,7 +72,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuItem
-            onClick={() => router.push(`/admin/dashboard/employee/${data.id}`)}
+            onClick={() => router.push(`/admin/dashboard/inventory/${data.id}`)}
           >
             <Edit className="w-4 h-4 mr-2" />
             Update

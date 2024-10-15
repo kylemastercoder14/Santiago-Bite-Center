@@ -54,6 +54,7 @@ const BranchAuthModal = () => {
 
     try {
       setIsPending(true);
+      
       const signInAttempt = await signIn.create({
         identifier: email,
         password: password,

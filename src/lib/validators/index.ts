@@ -55,6 +55,7 @@ export const InventoryFormSchema = z.object({
   stocks: z.coerce.number().min(1, { message: "Stocks is required." }),
   buffer: z.coerce.number().min(1, { message: "Buffer is required." }),
   consume: z.coerce.number().optional(),
+  branch: z.string().min(1, { message: "Branch is required." }),
 });
 
 export const AppointmentFormSchema = z.object({

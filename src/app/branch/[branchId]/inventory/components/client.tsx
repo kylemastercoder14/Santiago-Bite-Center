@@ -23,13 +23,6 @@ const InventoryClient: React.FC<InventoryClientProps> = ({ data }) => {
           title={`Vaccines (${data.length})`}
           description="Manage vaccines for your facility."
         />
-        <Button
-          variant="destructive"
-          onClick={() => router.push(`/branch/${params.branchId}/inventory/new`)}
-        >
-          <Plus className="mr-2 w-4 h-4" />
-          Add New Vaccine
-        </Button>
       </div>
       <Separator />
       <DataTable searchKey="name" columns={columns} data={data} />

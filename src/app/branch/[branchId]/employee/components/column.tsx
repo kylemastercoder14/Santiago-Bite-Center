@@ -28,9 +28,9 @@ export const columns: ColumnDef<EmployeeColumn>[] = [
     accessorKey: "createdAt",
     header: "Date Created",
   },
-  {
-    id: "actions",
-    header: "Actions",
-    cell: ({ row }) => <CellAction data={row.original} />,
-  },
+  // {
+  //   id: "actions",
+  //   header: "Actions",
+  //   cell: ({ row }) => <CellAction data={row.original} />,
+  // },
 ];

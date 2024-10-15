@@ -210,7 +210,7 @@ const SignUpForm = () => {
         </Button>
       </form>
       <div className="grid gap-4 w-full mt-5">
-        <div className="flex items-center gap-4 justify-center">
+        {/* <div className="flex items-center gap-4 justify-center">
           <div className="flex-1 border-t border-gray-500"></div>
           <span>Or continue with</span>
           <div className="flex-1 border-t border-gray-500"></div>
@@ -219,7 +219,7 @@ const SignUpForm = () => {
           <SignUpButtonIcon strategy="facebook" />
           <SignUpButtonIcon strategy="google" />
           <SignUpButtonIcon strategy="microsoft" />
-        </div>
+        </div> */}
         <div className="mt-4 text-center text-sm">
           Already have an account?{" "}
           <Link href="/auth/sign-in" className="underline">

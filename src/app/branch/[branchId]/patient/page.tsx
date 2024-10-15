@@ -4,10 +4,18 @@ import db from "@/lib/db";
 import { PatientColumn } from "./components/column";
 import PatientClient from "./components/client";
 
-const Patient = async () => {
+const Patient = async ({params}: {params: {branchId: string}}) => {
   const users = await db.user.findMany({
     orderBy: {
       createdAt: "desc",
+    },
+    where: {
+      type: "User",
+      Patient: {
+        some: {
+          branchId: params.branchId,
+        }
+      }
     },
     include: {
       VitalSign: true,

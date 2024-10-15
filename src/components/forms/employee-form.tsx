@@ -23,6 +23,7 @@ import {
   deleteEmployee,
   updateEmployee,
 } from "@/actions/employee";
+import { useSignUp } from "@clerk/nextjs";
 
 interface EmployeeFormProps {
   initialData: Employee | null;
@@ -30,6 +31,7 @@ interface EmployeeFormProps {
 }
 
 const EmployeeForm: React.FC<EmployeeFormProps> = ({ initialData, branch }) => {
+  const { isLoaded, signUp, setActive } = useSignUp();
   const [isLoading, setIsLoading] = useState(false);
   const [employeeId, setEmployeeId] = useState(initialData?.id ?? "");
   const [open, setOpen] = useState(false);
@@ -51,6 +53,7 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ initialData, branch }) => {
   });
 
   const onSubmit = async (values: z.infer<typeof EmployeeFormSchema>) => {
+    if (!isLoaded) return;
     try {
       setIsLoading(true);
       if (!initialData) {

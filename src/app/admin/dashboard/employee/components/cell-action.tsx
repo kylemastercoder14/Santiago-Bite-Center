@@ -16,7 +16,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import AlertModal from "@/components/alert-modal";
-import { deleteBranch } from "@/actions/branch";
+import { deleteEmployee } from "@/actions/employee";
 
 interface CellActionProps {
   data: EmployeeColumn;
@@ -34,7 +34,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onDelete = async () => {
     try {
       setIsLoading(true);
-      await deleteBranch(data.id).then((data) => {
+      await deleteEmployee(data.id).then((data) => {
         if (data.error) {
           toast.error(data.error);
         } else {

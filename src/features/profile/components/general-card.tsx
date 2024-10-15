@@ -60,7 +60,7 @@ const GeneralCard = ({ patient }: { patient?: Patient }) => {
       province: "",
       municipality: "",
       barangay: "",
-      branch: "",
+      branch: patient?.branchId ?? "",
     },
   });
 

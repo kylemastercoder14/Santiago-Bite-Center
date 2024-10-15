@@ -43,6 +43,13 @@ import {
   DATE_YEAR_MIN,
 } from "@/lib/validators";
 import { Calendar } from "@/components/ui/custom-calendar";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const IncidentCard = ({ incident }: { incident?: Incident }) => {
   const [pending, setIsPending] = useState(false);
@@ -208,11 +215,22 @@ const IncidentCard = ({ incident }: { incident?: Incident }) => {
                 <FormItem>
                   <FormLabel>Bitting Animal</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Enter Bitting Animal"
-                      type="text"
-                      {...field}
-                    />
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Bitting Animal" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Alive">Alive</SelectItem>
+                        <SelectItem value="Dead">Dead</SelectItem>
+                        <SelectItem value="Killed">Killed</SelectItem>
+                        <SelectItem value="Unknown">Unknown</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
