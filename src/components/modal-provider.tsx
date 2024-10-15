@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import React, { useState } from "react";
 import AdminModal from "./admin-modal";
-import BranchModal from "./branch-modal";
 
 export const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -16,7 +15,6 @@ export const ModalProvider = () => {
   return (
     <>
       <AdminModal />
-      <BranchModal />
     </>
   );
 };
