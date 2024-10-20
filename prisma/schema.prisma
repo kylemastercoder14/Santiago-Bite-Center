@@ -154,17 +154,23 @@ model Service {
 }
 
 model Employee {
-  id        String   @id @unique @default(cuid())
-  firstName String
-  lastName  String
-  email     String
-  password  String
-  imageUrl  String?
-  role      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  branchId  String
-  branch    Branch   @relation(fields: [branchId], references: [id])
+  id              String   @id @unique @default(cuid())
+  firstName       String
+  lastName        String
+  email           String
+  password        String
+  imageUrl        String?
+  role            String
+  address         String
+  gender          String
+  otherInfo       String?
+  graduatedSchool String
+  yearGraduated   String
+  yearsExperience String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  branchId        String
+  branch          Branch   @relation(fields: [branchId], references: [id])
 }
 
 model Appointment {
@@ -233,7 +239,7 @@ model Vaccination {
   updatedAt DateTime @updatedAt
 
   userId String
-  user   User @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
 
   inventoryId String
   inventory   Inventory @relation(fields: [inventoryId], references: [id])

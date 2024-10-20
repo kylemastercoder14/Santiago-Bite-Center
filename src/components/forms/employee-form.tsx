@@ -49,6 +49,12 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ initialData, branch }) => {
       role: initialData?.role ?? "",
       branch: initialData?.branchId ?? "",
       imageUrl: initialData?.imageUrl ?? "",
+      gender: initialData?.gender ?? "",
+      address: initialData?.address ?? "",
+      graduatedSchool: initialData?.graduatedSchool ?? "",
+      yearGraduated: initialData?.yearGraduated ?? "",
+      yearsExperience: initialData?.yearsExperience ?? "",
+      otherInfo: initialData?.otherInfo ?? "",
     },
   });
 
@@ -157,15 +163,28 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ initialData, branch }) => {
               disabled={isLoading}
             />
           </div>
-          <CustomFormField
-            control={form.control}
-            fieldType={FormFieldType.INPUT}
-            name="email"
-            type="email"
-            label="Email Address"
-            placeholder="Enter Email Address"
-            disabled={isLoading}
-          />
+          <div className="grid grid-cols-2 gap-5">
+            <CustomFormField
+              control={form.control}
+              fieldType={FormFieldType.INPUT}
+              name="email"
+              type="email"
+              label="Email Address"
+              placeholder="Enter Email Address"
+              disabled={isLoading}
+            />
+            <CustomFormField
+              control={form.control}
+              fieldType={FormFieldType.SELECT}
+              name="gender"
+              label="Gender"
+              placeholder="Select Gender"
+              disabled={isLoading}
+            >
+              <SelectItem value="Male">Male</SelectItem>
+              <SelectItem value="Female">Female</SelectItem>
+            </CustomFormField>
+          </div>
           <div className="grid grid-cols-2 gap-5">
             <CustomFormField
               control={form.control}
@@ -194,6 +213,48 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ initialData, branch }) => {
               <SelectItem value="Nurse">Nurse</SelectItem>
             </CustomFormField>
           </div>
+          <div className="grid grid-cols-3 gap-5">
+            <CustomFormField
+              control={form.control}
+              fieldType={FormFieldType.INPUT}
+              name="graduatedSchool"
+              label="School Graduated"
+              placeholder="Enter School Graduated"
+              disabled={isLoading}
+            />
+            <CustomFormField
+              control={form.control}
+              fieldType={FormFieldType.INPUT}
+              name="yearGraduated"
+              label="Year Graduated"
+              placeholder="Enter Year Graduated"
+              disabled={isLoading}
+            />
+            <CustomFormField
+              control={form.control}
+              fieldType={FormFieldType.INPUT}
+              name="yearsExperience"
+              label="Years of Experience"
+              placeholder="Enter Years of Experience"
+              disabled={isLoading}
+            />
+          </div>
+          <CustomFormField
+            control={form.control}
+            fieldType={FormFieldType.INPUT}
+            name="address"
+            label="Address"
+            placeholder="Enter Address"
+            disabled={isLoading}
+          />
+          <CustomFormField
+            control={form.control}
+            fieldType={FormFieldType.INPUT}
+            name="otherInfo"
+            label="Other Information (optional)"
+            placeholder="Enter Other Information (optional)"
+            disabled={isLoading}
+          />
           <CustomFormField
             control={form.control}
             fieldType={FormFieldType.UPLOAD}

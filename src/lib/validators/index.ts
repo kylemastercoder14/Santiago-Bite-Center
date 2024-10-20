@@ -48,6 +48,12 @@ export const EmployeeFormSchema = z.object({
   imageUrl: z.string().optional(),
   role: z.string().min(1, { message: "Role is required." }),
   branch: z.string().min(1, { message: "Branch is required." }),
+  gender: z.string().min(1, {message: "Gender is required."}),
+  address: z.string().min(1, {message: "Address is required."}),
+  graduatedSchool: z.string().min(1, {message: "Graduated school is required."}),
+  yearGraduated: z.string().min(1, {message: "Graduated year is required."}),
+  yearsExperience: z.string().min(1, {message: "Years of experience is required."}),
+  otherInfo: z.string().optional(),
 });
 
 export const InventoryFormSchema = z.object({

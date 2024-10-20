@@ -15,8 +15,20 @@ export const createEmployee = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { firstName, lastName, email, branch, role, imageUrl } =
-    validatedField.data;
+  const {
+    firstName,
+    lastName,
+    email,
+    branch,
+    role,
+    imageUrl,
+    gender,
+    address,
+    yearGraduated,
+    graduatedSchool,
+    yearsExperience,
+    otherInfo,
+  } = validatedField.data;
 
   const password = "Santiagobitecenter2024@";
   const hashedPassword = await bcryptjs.hash(password, 10);
@@ -31,6 +43,12 @@ export const createEmployee = async (
         branchId: branch,
         role,
         imageUrl,
+        gender,
+        address,
+        yearGraduated,
+        graduatedSchool,
+        yearsExperience,
+        otherInfo,
       },
     });
 
