@@ -459,3 +459,30 @@ export const deletePatient = async (patientId: string) => {
     };
   }
 };
+
+export const getPatientById = async (patientId: string) => {
+  if (!patientId) {
+    return { error: "Patient ID is required" };
+  }
+
+  try {
+    const patient = await db.patient.findUnique({
+      where: { id: patientId },
+      include: {
+        medical: true,
+        vitalSign: true,
+        incident: true,
+        treatment: true,
+        user: true,
+      }
+    });
+
+    return { data: patient };
+  } catch (error: any) {
+    return {
+      error: `Failed to fetch patient. Please try again. ${
+        error.message || ""
+      }`,
+    };
+  }
+}
