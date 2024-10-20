@@ -404,48 +404,50 @@ export const deletePatient = async (patientId: string) => {
       return { error: "Patient does not exist" };
     }
 
-    // Proceed to delete the patient
-    const patient = await db.patient.delete({
-      where: { id: patientId },
-    });
+    // Delete associated records first
+    const userId = existingPatient.userId;
 
-    await db.user.delete({
-      where: { id: patient.userId },
-    });
-
-    // Continue deleting associated records
     await db.vitalSign.deleteMany({
-      where: { userId: patient.userId },
+      where: { userId },
     });
 
     await db.medical.deleteMany({
-      where: { userId: patient.userId },
+      where: { userId },
     });
 
     await db.incident.deleteMany({
-      where: { userId: patient.userId },
+      where: { userId },
     });
 
     await db.treatment.deleteMany({
-      where: { userId: patient.userId },
+      where: { userId },
     });
 
     await db.appointment.deleteMany({
-      where: { userId: patient.userId },
-    });
-
-    await db.billing.deleteMany({
-      where: {
-        userId: patient.userId,
-      },
+      where: { userId },
     });
 
     await db.billingItem.deleteMany({
       where: {
         billing: {
-          userId: patient.userId,
+          userId,
         },
       },
+    });
+
+    await db.billing.deleteMany({
+      where: {
+        userId,
+      },
+    });
+
+    // Delete the patient and then the user
+    await db.patient.delete({
+      where: { id: patientId },
+    });
+
+    await db.user.delete({
+      where: { id: userId },
     });
 
     return { success: "Patient deleted successfully" };

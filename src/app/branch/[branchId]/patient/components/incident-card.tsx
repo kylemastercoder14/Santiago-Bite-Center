@@ -196,11 +196,24 @@ const IncidentCard = () => {
                 <FormItem>
                   <FormLabel>Site of Bite</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Enter Site of Bite"
-                      type="text"
-                      {...field}
-                    />
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Site of Bite" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Neck">Neck</SelectItem>
+                        <SelectItem value="Shoulder">Shoulder</SelectItem>
+                        <SelectItem value="Arms">Arms</SelectItem>
+                        <SelectItem value="Front Leg">Front Leg</SelectItem>
+                        <SelectItem value="Back Leg">Back Leg</SelectItem>
+                        <SelectItem value="Feet">Feet</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -281,11 +294,21 @@ const IncidentCard = () => {
                 <FormItem>
                   <FormLabel>Category</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Enter Category"
-                      type="text"
-                      {...field}
-                    />
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select Category" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Category 1">Category 1</SelectItem>
+                        <SelectItem value="Category 2">Category 2</SelectItem>
+                        <SelectItem value="Category 3">Category 3</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

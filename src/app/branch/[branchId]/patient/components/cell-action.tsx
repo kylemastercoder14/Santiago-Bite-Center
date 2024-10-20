@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Copy, Eye, MoreHorizontal, Trash } from "lucide-react";
+import { Copy, Edit, Eye, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -36,7 +36,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onDelete = async () => {
     try {
       setIsLoading(true);
-      await deletePatient(data.id).then((data) => {
+      await deletePatient(data.patientId).then((data) => {
         if (data.error) {
           toast.error(data.error);
         } else {
@@ -73,10 +73,20 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuItem
-            onClick={() => router.push(`/branch/${params.branchId}/patient/${data.id}`)}
+            onClick={() =>
+              router.push(`/branch/${params.branchId}/patient/${data.id}`)
+            }
           >
             <Eye className="w-4 h-4 mr-2" />
             View
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() =>
+              router.push(`/branch/${params.branchId}/patient/${data.id}/update`)
+            }
+          >
+            <Edit className="w-4 h-4 mr-2" />
+            Update
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => onCopy(data.name)}>
             <Copy className="w-4 h-4 mr-2" />

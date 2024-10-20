@@ -4,7 +4,7 @@ import db from "@/lib/db";
 import { PatientColumn } from "./components/column";
 import PatientClient from "./components/client";
 
-const Patient = async ({params}: {params: {branchId: string}}) => {
+const Patient = async ({ params }: { params: { branchId: string } }) => {
   const users = await db.user.findMany({
     orderBy: {
       createdAt: "desc",
@@ -14,8 +14,9 @@ const Patient = async ({params}: {params: {branchId: string}}) => {
     },
     include: {
       VitalSign: true,
+      Incident: true,
       Medical: true,
-      Patient: {include: {branch: true}},
+      Patient: { include: { branch: true } },
       Treatment: true,
     },
   });
@@ -24,15 +25,17 @@ const Patient = async ({params}: {params: {branchId: string}}) => {
     // Check if the user has any patients and select the first one
     const patient = user.Patient?.[0];
     const branch = patient?.branch?.name;
+    const incident = user?.Incident?.[0];
     return {
       id: user.id,
+      patientId: patient?.id,
       name: `${user.firstName} ${user.lastName}`,
-      email: user.email,
-      contact: patient?.contactNumber || "--",
+      email: incident?.natureOfIncident || "--",
+      contact: incident?.location || "--",
       adminBranch: branch || "--",
-      age: patient?.age || "--",
-      sex: patient?.sex || "--",
-      address: patient?.address || "--",
+      age: incident?.date || "--",
+      sex: incident?.date || "--",
+      address: incident?.category || "--",
       createdAt: format(user.createdAt, "MMMM do, yyyy"),
     };
   });

@@ -7,6 +7,7 @@ export type PatientColumn = {
   id: string;
   name: string;
   email: string;
+  patientId: string;
   age: string;
   sex: string;
   adminBranch: string;
@@ -22,23 +23,19 @@ export const columns: ColumnDef<PatientColumn>[] = [
   },
   {
     accessorKey: "email",
-    header: "Email",
+    header: "Nature of Incident",
   },
   {
     accessorKey: "contact",
-    header: "Contact Address",
-  },
-  {
-    accessorKey: "age",
-    header: "Age",
+    header: "Site of Incident",
   },
   {
     accessorKey: "sex",
-    header: "Sex",
+    header: "Date of Incident",
   },
   {
     accessorKey: "address",
-    header: "Address",
+    header: "Category",
   },
   {
     accessorKey: "adminBranch",
