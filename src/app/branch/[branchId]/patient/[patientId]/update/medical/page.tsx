@@ -1,28 +1,15 @@
 "use client";
 
+import { Input } from "@/components/ui/input";
+import Image from "next/image";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import GeneralCard from "./_components/general-card";
+import { useParams } from "next/navigation";
+import { PatientProps } from "../page";
 import { getPatientById } from "@/actions/patients";
-import {
-  Incident,
-  Medical,
-  Patient,
-  Treatment,
-  User,
-  VitalSign,
-} from "@prisma/client";
+import MedicalCard from "../_components/medical-card";
 
-export interface PatientProps extends Patient {
-  user: User;
-  vitalSign: VitalSign[];
-  medical: Medical[];
-  incident: Incident[];
-  treatment: Treatment[];
-}
-
-const UpdatePatient = () => {
+const Medical = () => {
   const params = useParams();
   const [patient, setPatient] = useState<PatientProps | null>(null);
   useEffect(() => {
@@ -51,7 +38,6 @@ const UpdatePatient = () => {
         >
           <Link
             href={`/branch/${params.branchId}/patient/${params.patientId}/update`}
-            className="font-semibold text-primary"
           >
             General
           </Link>
@@ -62,6 +48,7 @@ const UpdatePatient = () => {
           </Link>
           <Link
             href={`/branch/${params.branchId}/patient/${params.patientId}/update/medical`}
+            className="font-semibold text-primary"
           >
             Medical
           </Link>
@@ -77,11 +64,11 @@ const UpdatePatient = () => {
           </Link>
         </nav>
         <div className="grid gap-6">
-          {patient && <GeneralCard initialData={patient} />}
+        {patient && <MedicalCard initialData={patient} />}
         </div>
       </div>
     </main>
   );
 };
 
-export default UpdatePatient;
+export default Medical;

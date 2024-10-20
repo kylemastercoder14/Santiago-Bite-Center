@@ -33,6 +33,7 @@ const Patient = async ({ params }: { params: { branchId: string } }) => {
       email: incident?.natureOfIncident || "--",
       contact: incident?.location || "--",
       adminBranch: branch || "--",
+      branchId: patient?.branchId,
       age: incident?.date || "--",
       sex: incident?.date || "--",
       address: incident?.category || "--",

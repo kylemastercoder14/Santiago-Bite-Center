@@ -80,23 +80,29 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             <Eye className="w-4 h-4 mr-2" />
             View
           </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() =>
-              router.push(`/branch/${params.branchId}/patient/${data.patientId}/update`)
-            }
-          >
-            <Edit className="w-4 h-4 mr-2" />
-            Update
-          </DropdownMenuItem>
+          {params.branchId === data.branchId && (
+            <DropdownMenuItem
+              onClick={() =>
+                router.push(
+                  `/branch/${params.branchId}/patient/${data.patientId}/update`
+                )
+              }
+            >
+              <Edit className="w-4 h-4 mr-2" />
+              Update
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem onClick={() => onCopy(data.name)}>
             <Copy className="w-4 h-4 mr-2" />
             Copy
           </DropdownMenuItem>
           <DropdownMenuSeparator />
+          {params.branchId === data.branchId && (
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="w-4 h-4 mr-2" />
             Delete
           </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </>

@@ -1,28 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import GeneralCard from "./_components/general-card";
+import { useParams } from "next/navigation";
+import { PatientProps } from "../page";
 import { getPatientById } from "@/actions/patients";
-import {
-  Incident,
-  Medical,
-  Patient,
-  Treatment,
-  User,
-  VitalSign,
-} from "@prisma/client";
+import TreatmentCard from "../_components/treatment-card";
 
-export interface PatientProps extends Patient {
-  user: User;
-  vitalSign: VitalSign[];
-  medical: Medical[];
-  incident: Incident[];
-  treatment: Treatment[];
-}
-
-const UpdatePatient = () => {
+const Treatment = () => {
   const params = useParams();
   const [patient, setPatient] = useState<PatientProps | null>(null);
   useEffect(() => {
@@ -42,7 +27,7 @@ const UpdatePatient = () => {
   return (
     <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
       <div className="grid w-full gap-2">
-        <h1 className="text-3xl font-semibold">Update Patient Record</h1>
+        <h1 className="text-3xl font-semibold">Add New Patient Record</h1>
       </div>
       <div className="grid w-full items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
         <nav
@@ -51,7 +36,6 @@ const UpdatePatient = () => {
         >
           <Link
             href={`/branch/${params.branchId}/patient/${params.patientId}/update`}
-            className="font-semibold text-primary"
           >
             General
           </Link>
@@ -72,16 +56,17 @@ const UpdatePatient = () => {
           </Link>
           <Link
             href={`/branch/${params.branchId}/patient/${params.patientId}/update/treatment`}
+            className="font-semibold text-primary"
           >
             Treatment
           </Link>
         </nav>
         <div className="grid gap-6">
-          {patient && <GeneralCard initialData={patient} />}
+        {patient && <TreatmentCard initialData={patient} />}
         </div>
       </div>
     </main>
   );
 };
 
-export default UpdatePatient;
+export default Treatment;

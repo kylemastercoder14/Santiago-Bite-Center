@@ -66,7 +66,7 @@ const GeneralCard = ({ initialData }: { initialData: PatientProps }) => {
       province: addressComponents?.province ?? "",
       municipality: addressComponents?.municipality ?? "",
       barangay: addressComponents?.barangay ?? "",
-      branch: "",
+      branch: initialData?.branchId ?? "",
     },
   });
 
@@ -85,6 +85,7 @@ const GeneralCard = ({ initialData }: { initialData: PatientProps }) => {
       setIsPending(false);
       return;
     }
+    
     try {
       const response = await createWalkInPatient(
         values.email ?? "",
