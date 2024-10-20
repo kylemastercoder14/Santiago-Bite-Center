@@ -21,7 +21,7 @@ import {
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { LuLoader } from "react-icons/lu";
 import { createIncident } from "@/actions/patients";
@@ -51,6 +51,7 @@ import { IncidentSignFormValidators } from "@/features/profile/validators";
 const IncidentCard = () => {
   const [pending, setIsPending] = useState(false);
   const router = useRouter();
+  const params = useParams();
 
   const form = useForm<z.infer<typeof IncidentSignFormValidators>>({
     resolver: zodResolver(IncidentSignFormValidators),
@@ -75,7 +76,8 @@ const IncidentCard = () => {
         if (data?.error) {
           toast.error(data.error);
         } else {
-          router.push("/admin/dashboard/patient/new/treatment");
+          toast.success("Data saved successfully.");
+          router.push(`/branch/${params.branchId}/patient/new/treatment`);
         }
       });
     } catch (error) {
@@ -289,11 +291,7 @@ const IncidentCard = () => {
                 </FormItem>
               )}
             />
-            <Button
-              variant="destructive"
-              disabled={pending}
-              type="submit"
-            >
+            <Button variant="destructive" disabled={pending} type="submit">
               {pending && <LuLoader className="size-4 animate-spin mr-2" />}
               Save Changes
             </Button>

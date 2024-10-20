@@ -43,7 +43,7 @@ import { createUser, createWalkInPatient } from "@/actions/user";
 
 const GeneralCard = () => {
   const params = useParams();
-  const [branch, setBranch] = useState<Branch | null>(null);
+  const [branch, setBranch] = useState<Branch[]>([]);
   const [pending, setIsPending] = useState(false);
   const router = useRouter();
   const { user, isLoaded } = useUser();
@@ -64,27 +64,17 @@ const GeneralCard = () => {
       province: "",
       municipality: "",
       barangay: "",
-      branch: branch?.id ?? "",
+      branch: "",
     },
   });
 
   useEffect(() => {
     const fetchBranch = async () => {
-      const response = await getBranchById(
-        Array.isArray(params.branchId) ? params.branchId[0] : params.branchId
-      );
+      const response = await getAllBranches();
       setBranch(response);
-
-      // Update form values after branch is fetched
-      if (response) {
-        form.reset({
-          ...form.getValues(),
-          branch: response.id,
-        });
-      }
     };
     fetchBranch();
-  }, [params.branchId, form]);
+  }, []);
 
   const onSubmit = async (values: z.infer<typeof GeneralFormValidators>) => {
     setIsPending(true);
@@ -103,7 +93,8 @@ const GeneralCard = () => {
         if (data?.error) {
           toast.error(data.error);
         } else {
-          router.push("/admin/dashboard/patient/new/vital-signs");
+          router.push(`/branch/${params.branchId}/patient/new/vital-signs`);
+          toast.success("Data saved successfully.");
         }
       });
     } catch (error) {
@@ -432,11 +423,28 @@ const GeneralCard = () => {
             <FormField
               control={form.control}
               name="branch"
-              disabled
+              disabled={pending}
               render={({ field }) => (
-                <FormItem className="hidden">
+                <FormItem>
                   <FormLabel>Branch</FormLabel>
-                  <Input placeholder="Enter Branch" {...field} />
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                    disabled={pending}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Branch" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {branch?.map((item) => (
+                        <SelectItem key={item.id} value={item.id}>
+                          {item.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

@@ -22,7 +22,7 @@ import {
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { LuLoader } from "react-icons/lu";
 import { createVitalSign } from "@/actions/patients";
@@ -45,9 +45,9 @@ import { Calendar } from "@/components/ui/custom-calendar";
 import { VitalSignFormValidators } from "@/features/profile/validators";
 
 const VitalSignCard = () => {
+  const params = useParams();
   const [pending, setIsPending] = useState(false);
   const router = useRouter();
-  const { user, isLoaded } = useUser();
 
   const form = useForm<z.infer<typeof VitalSignFormValidators>>({
     resolver: zodResolver(VitalSignFormValidators),
@@ -69,7 +69,8 @@ const VitalSignCard = () => {
         if (data?.error) {
           toast.error(data.error);
         } else {
-          router.push("/admin/dashboard/patient/new/medical");
+          toast.success("Data saved successfully.");
+          router.push(`/branch/${params.branchId}/patient/new/medical`);
         }
       });
     } catch (error) {

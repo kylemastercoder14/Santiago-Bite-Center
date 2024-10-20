@@ -22,7 +22,7 @@ import {
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { LuLoader } from "react-icons/lu";
 import { Treatment } from "@prisma/client";
@@ -47,6 +47,7 @@ import { createAppointment } from "@/actions/appointment";
 const TreatmentCard = () => {
   const [pending, setIsPending] = useState(false);
   const router = useRouter();
+  const params = useParams();
 
   const form = useForm<z.infer<typeof TreatmentFormValidators>>({
     resolver: zodResolver(TreatmentFormValidators),
@@ -69,7 +70,7 @@ const TreatmentCard = () => {
       if(response.success) {
         await createAppointment(response?.userId as string, new Date().toISOString().split('T')[0], new Date().toLocaleTimeString());
         toast.success(response.success);
-        router.push(`/admin/dashboard/patient`);
+        router.push(`/branch/${params.branchId}/patient`);
       } else {
         toast.error(response.error);
       }

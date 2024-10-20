@@ -35,11 +35,71 @@ interface PatientProfilingProps {
   billingData: BillingWithService[];
 }
 
-const PatientProfiling = ({ initialData, billingData }: PatientProfilingProps) => {
+const PatientProfiling = ({
+  initialData,
+  billingData,
+}: PatientProfilingProps) => {
   const patient = initialData?.Patient?.[0];
-  const vitalSign = initialData?.VitalSign?.[0];
 
   if (!initialData) return <p>No Profiling Found</p>;
+
+  const renderProfilingImage = () => {
+    // Normalize the input to lower case
+    const siteOfBite = initialData.Incident[0].siteOfBite.toLowerCase();
+
+    switch (siteOfBite) {
+      case "head":
+      case "neck":
+        return (
+          <Image
+            src="/images/profiling-head.png"
+            alt="Profiling Head"
+            fill
+            className="w-full h-full object-contain"
+          />
+        );
+      case "shoulder":
+        return (
+          <Image
+            src="/images/profiling-shoulder.png"
+            alt="Profiling Shoulder"
+            fill
+            className="w-full h-full object-contain"
+          />
+        );
+      case "arm":
+      case "arms":
+      case "back":
+      case "chest":
+        return (
+          <Image
+            src="/images/arm-profiling.png"
+            alt="Profiling Arm"
+            fill
+            className="w-full h-full object-contain"
+          />
+        );
+      case "legs":
+      case "leg":
+        return (
+          <Image
+            src="/images/profiling-legs.png"
+            alt="Profiling Legs"
+            fill
+            className="w-full h-full object-contain"
+          />
+        );
+      default:
+        return (
+          <Image
+            src="/images/profiling.png"
+            alt="Default Profiling"
+            fill
+            className="w-full h-full object-contain"
+          />
+        );
+    }
+  };
 
   return (
     <div className="flex flex-col mx-auto border border-black max-w-7xl">
@@ -308,12 +368,7 @@ const PatientProfiling = ({ initialData, billingData }: PatientProfilingProps) =
           ))}
         </div>
         <div className="col-span-5 flex items-center justify-center mx-auto flex-col relative w-full h-[500px]">
-          <Image
-            src="/images/profiling.png"
-            alt="Profiling"
-            fill
-            className="w-full h-full"
-          />
+          {renderProfilingImage()}
         </div>
       </div>
       <div className="grid grid-cols-3 gap-5">
@@ -389,23 +444,67 @@ const PatientProfiling = ({ initialData, billingData }: PatientProfilingProps) =
             <tbody>
               <tr>
                 <td className="px-2">Day 0</td>
-                <td className="border px-2 border-black">{format(billingData[0]?.createdAt, "MMMM do, yyyy")}</td>
-                <td className="border-l px-2 border-b border-black">{billingData[0].service?.name}</td>
+                <td className="border px-2 border-black">
+                  {billingData.length > 0 && billingData[0].createdAt
+                    ? format(
+                        new Date(billingData[0].createdAt),
+                        "MMMM do, yyyy"
+                      )
+                    : "N/A"}
+                </td>
+                <td className="border-l px-2 border-b border-black">
+                  {billingData.length > 0 && billingData[0].service?.name
+                    ? billingData[0].service.name
+                    : "N/A"}
+                </td>
               </tr>
               <tr>
                 <td className="px-2">Day 3</td>
-                <td className="border px-2 border-black"></td>
-                <td className="border-l px-2 border-b border-black"></td>
+                <td className="border px-2 border-black">
+                  {billingData.length > 0 && billingData[1].createdAt
+                    ? format(
+                        new Date(billingData[1].createdAt),
+                        "MMMM do, yyyy"
+                      )
+                    : "N/A"}
+                </td>
+                <td className="border-l px-2 border-b border-black">
+                  {billingData.length > 0 && billingData[1].service?.name
+                    ? billingData[1].service.name
+                    : "N/A"}
+                </td>
               </tr>
               <tr>
                 <td className="px-2">Day 7</td>
-                <td className="border px-2 border-black"></td>
-                <td className="border-l px-2 border-b border-black"></td>
+                <td className="border px-2 border-black">
+                  {billingData.length > 0 && billingData[2].createdAt
+                    ? format(
+                        new Date(billingData[2].createdAt),
+                        "MMMM do, yyyy"
+                      )
+                    : "N/A"}
+                </td>
+                <td className="border-l px-2 border-b border-black">
+                  {billingData.length > 0 && billingData[2].service?.name
+                    ? billingData[2].service.name
+                    : "N/A"}
+                </td>
               </tr>
               <tr>
                 <td className="px-2">Day 21/28</td>
-                <td className="border px-2 border-black"></td>
-                <td className="border-l px-2 border-b border-black"></td>
+                <td className="border px-2 border-black">
+                  {billingData.length > 0 && billingData[3].createdAt
+                    ? format(
+                        new Date(billingData[3].createdAt),
+                        "MMMM do, yyyy"
+                      )
+                    : "N/A"}
+                </td>
+                <td className="border-l px-2 border-b border-black">
+                  {billingData.length > 0 && billingData[3].service?.name
+                    ? billingData[3].service.name
+                    : "N/A"}
+                </td>
               </tr>
             </tbody>
           </table>

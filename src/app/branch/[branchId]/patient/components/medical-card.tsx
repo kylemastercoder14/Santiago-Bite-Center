@@ -14,7 +14,7 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { PlusCircledIcon } from "@radix-ui/react-icons";
 import { Label } from "@/components/ui/label";
 import { createMedicalHistory } from "@/actions/patients";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { LuLoader } from "react-icons/lu";
 
@@ -22,6 +22,7 @@ const MedicalCard = () => {
   const [pending, setIsPending] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const router = useRouter();
+  const params = useParams();
   const [medicalHistory, setMedicalHistory] = useState([
     { illness: "", postSurgeries: "", medication: "", dosage: "" },
   ]);
@@ -38,7 +39,8 @@ const MedicalCard = () => {
         if (data?.error) {
           toast.error(data.error);
         } else {
-          router.push("/admin/dashboard/patient/new/incident");
+          toast.success("Data saved successfully.");
+          router.push(`/branch/${params.branchId}/patient/new/incident`);
         }
       });
     } catch (error) {

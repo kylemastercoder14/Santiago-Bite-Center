@@ -88,6 +88,7 @@ export const createMedicalHistory = async (
       return { error: "Unauthenticated" };
     }
 
+    // Fetch patient based on the user type
     const existingPatient = await db.patient.findFirst({
       where: { userId: existingUser.id },
     });
@@ -95,6 +96,18 @@ export const createMedicalHistory = async (
     const existingPatientWalkIn = await db.patient.findFirst({
       orderBy: { createdAt: "desc" },
     });
+
+    // Ensure a valid patient record exists
+    const patientToConnect =
+      type === "walk-in" ? existingPatientWalkIn : existingPatient;
+
+    if (!patientToConnect || !patientToConnect.id) {
+      return {
+        error: `Failed to find a valid patient for ${
+          type === "walk-in" ? "walk-in" : "registered user"
+        }.`,
+      };
+    }
 
     for (const history of medicalHistories) {
       // Check for existing records with the same details for the user
@@ -104,10 +117,7 @@ export const createMedicalHistory = async (
           postSurgeries: history.postSurgeries,
           medication: history.medication,
           dosage: history.dosage,
-          userId:
-            type === "walk-in"
-              ? existingPatientWalkIn?.userId ?? ""
-              : existingUser.id ?? "",
+          userId: patientToConnect.userId,
         },
       });
 
@@ -130,12 +140,9 @@ export const createMedicalHistory = async (
             postSurgeries: history.postSurgeries,
             medication: history.medication,
             dosage: history.dosage,
-            userId:
-              type === "walk-in"
-                ? existingPatientWalkIn?.userId ?? ""
-                : existingUser.id ?? "",
+            userId: patientToConnect.userId,
             patients: {
-              connect: { id: existingPatient?.id },
+              connect: { id: patientToConnect.id }, // Connect to the valid patient
             },
           },
         });
@@ -158,6 +165,7 @@ export const createTreatment = async (
 ) => {
   const user = await currentUser();
 
+  // Validate form fields
   const validatedField = TreatmentFormValidators.safeParse(values);
 
   if (!validatedField.success) {
@@ -182,6 +190,7 @@ export const createTreatment = async (
     return { error: "Unauthenticated" };
   }
 
+  // Fetch patient based on the user type
   const existingPatient = await db.patient.findFirst({
     where: { userId: existingUser.id },
   });
@@ -190,7 +199,20 @@ export const createTreatment = async (
     orderBy: { createdAt: "desc" },
   });
 
+  // Ensure a valid patient record exists
+  const patientToConnect =
+    type === "walk-in" ? existingPatientWalkIn : existingPatient;
+
+  if (!patientToConnect || !patientToConnect.id) {
+    return {
+      error: `Failed to find a valid patient for ${
+        type === "walk-in" ? "walk-in" : "registered user"
+      }.`,
+    };
+  }
+
   try {
+    // Create the treatment record
     await db.treatment.create({
       data: {
         treatmentDate,
@@ -201,21 +223,18 @@ export const createTreatment = async (
         antiRabiesSerum,
         chickEmbryoCellVaccine,
         verocellRabiesVaccine,
-        userId:
-          type === "walk-in"
-            ? existingPatientWalkIn?.userId ?? ""
-            : existingUser.id ?? "",
-        patient: { connect: { id: existingPatient?.id } },
+        userId: patientToConnect.userId, // Use the valid userId
+        patient: { connect: { id: patientToConnect.id } }, // Connect to the valid patient
       },
     });
 
-    const userId = type === "walk-in" ? existingPatientWalkIn?.userId : existingUser.id;
-    return { success: "Treatment history created successfully", userId };
+    return {
+      success: "Treatment history created successfully",
+      userId: patientToConnect.userId,
+    };
   } catch (error: any) {
     return {
-      error: `Failed to create treatment history. Please try again. ${
-        error.message || ""
-      }`,
+      error: `Failed to create treatment history. Please try again. ${error.message || ""}`,
     };
   }
 };
@@ -243,21 +262,34 @@ export const createVitalSign = async (
     lastOutput,
   } = validatedField.data;
 
+  // Ensure authenticated user exists
   const existingUser = await getUserById(user?.id as string);
-
-  const existingPatientWalkIn = await db.patient.findFirst({
-    orderBy: { createdAt: "desc" },
-  });
-
   if (!existingUser) {
     return { error: "Unauthenticated" };
   }
 
+  // Fetch existing patient for the authenticated user
   const existingPatient = await db.patient.findFirst({
     where: { userId: existingUser.id },
   });
 
+  // Fetch the latest walk-in patient
+  const existingPatientWalkIn = await db.patient.findFirst({
+    orderBy: { createdAt: "desc" },
+  });
+
+  // Ensure patient exists based on type (walk-in or registered user)
+  const patientToConnect =
+    type === "walk-in" ? existingPatientWalkIn : existingPatient;
+
+  if (!patientToConnect || !patientToConnect.id) {
+    return {
+      error: `Failed to find a valid patient for ${type === "walk-in" ? "walk-in" : "registered user"}.`,
+    };
+  }
+
   try {
+    // Create vitalSign record and connect the patient
     await db.vitalSign.create({
       data: {
         temperature,
@@ -267,11 +299,8 @@ export const createVitalSign = async (
         bloodPressure,
         lastIntake,
         lastOutput,
-        userId:
-          type === "walk-in"
-            ? existingPatientWalkIn?.userId ?? ""
-            : existingUser.id ?? "",
-        Patient: { connect: { id: existingPatient?.id ?? "" } },
+        userId: patientToConnect.userId, // User ID must come from the patient
+        Patient: { connect: { id: patientToConnect.id } }, // Connect valid patient
       },
     });
     return { success: "Vital sign created successfully" };
@@ -290,6 +319,7 @@ export const createIncident = async (
 ) => {
   const user = await currentUser();
 
+  // Validate input fields
   const validatedField = IncidentSignFormValidators.safeParse(values);
 
   if (!validatedField.success) {
@@ -310,19 +340,33 @@ export const createIncident = async (
 
   const existingUser = await getUserById(user?.id as string);
 
-  const existingPatientWalkIn = await db.patient.findFirst({
-    orderBy: { createdAt: "desc" },
-  });
-
   if (!existingUser) {
     return { error: "Unauthenticated" };
   }
 
+  // Fetch patient based on the user type
   const existingPatient = await db.patient.findFirst({
     where: { userId: existingUser.id },
   });
 
+  const existingPatientWalkIn = await db.patient.findFirst({
+    orderBy: { createdAt: "desc" },
+  });
+
+  // Ensure a valid patient record exists
+  const patientToConnect =
+    type === "walk-in" ? existingPatientWalkIn : existingPatient;
+
+  if (!patientToConnect || !patientToConnect.id) {
+    return {
+      error: `Failed to find a valid patient for ${
+        type === "walk-in" ? "walk-in" : "registered user"
+      }.`,
+    };
+  }
+
   try {
+    // Create the incident
     await db.incident.create({
       data: {
         natureOfIncident,
@@ -333,17 +377,81 @@ export const createIncident = async (
         actionTaken,
         clinicalImpression,
         category,
-        userId:
-          type === "walk-in"
-            ? existingPatientWalkIn?.userId ?? ""
-            : existingUser.id ?? "",
-        patient: { connect: { id: existingPatient?.id } },
+        userId: patientToConnect.userId,
+        patient: { connect: { id: patientToConnect.id } }, // Connect to the valid patient
       },
     });
-    return { success: "incident created successfully" };
+    return { success: "Incident created successfully" };
   } catch (error: any) {
     return {
-      error: `Failed to create incident. Please try again. ${
+      error: `Failed to create incident. Please try again. ${error.message || ""}`,
+    };
+  }
+};
+
+export const deletePatient = async (patientId: string) => {
+  if (!patientId) {
+    return { error: "Patient ID is required" };
+  }
+
+  try {
+    // Check if the patient exists first
+    const existingPatient = await db.patient.findUnique({
+      where: { id: patientId },
+    });
+
+    if (!existingPatient) {
+      return { error: "Patient does not exist" };
+    }
+
+    // Proceed to delete the patient
+    const patient = await db.patient.delete({
+      where: { id: patientId },
+    });
+
+    await db.user.delete({
+      where: { id: patient.userId },
+    });
+
+    // Continue deleting associated records
+    await db.vitalSign.deleteMany({
+      where: { userId: patient.userId },
+    });
+
+    await db.medical.deleteMany({
+      where: { userId: patient.userId },
+    });
+
+    await db.incident.deleteMany({
+      where: { userId: patient.userId },
+    });
+
+    await db.treatment.deleteMany({
+      where: { userId: patient.userId },
+    });
+
+    await db.appointment.deleteMany({
+      where: { userId: patient.userId },
+    });
+
+    await db.billing.deleteMany({
+      where: {
+        userId: patient.userId,
+      },
+    });
+
+    await db.billingItem.deleteMany({
+      where: {
+        billing: {
+          userId: patient.userId,
+        },
+      },
+    });
+
+    return { success: "Patient deleted successfully" };
+  } catch (error: any) {
+    return {
+      error: `Failed to delete patient. Please try again. ${
         error.message || ""
       }`,
     };

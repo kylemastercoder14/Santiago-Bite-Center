@@ -11,16 +11,11 @@ const Patient = async ({params}: {params: {branchId: string}}) => {
     },
     where: {
       type: "User",
-      Patient: {
-        some: {
-          branchId: params.branchId,
-        }
-      }
     },
     include: {
       VitalSign: true,
       Medical: true,
-      Patient: true,
+      Patient: {include: {branch: true}},
       Treatment: true,
     },
   });
@@ -28,12 +23,13 @@ const Patient = async ({params}: {params: {branchId: string}}) => {
   const formattedPatient: PatientColumn[] = users.map((user) => {
     // Check if the user has any patients and select the first one
     const patient = user.Patient?.[0];
-
+    const branch = patient?.branch?.name;
     return {
       id: user.id,
       name: `${user.firstName} ${user.lastName}`,
       email: user.email,
       contact: patient?.contactNumber || "--",
+      adminBranch: branch || "--",
       age: patient?.age || "--",
       sex: patient?.sex || "--",
       address: patient?.address || "--",

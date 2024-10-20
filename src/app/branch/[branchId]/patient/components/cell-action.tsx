@@ -13,10 +13,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Copy, Eye, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import AlertModal from "@/components/alert-modal";
 import { deleteBranch } from "@/actions/branch";
+import { deletePatient } from "@/actions/patients";
 
 interface CellActionProps {
   data: PatientColumn;
@@ -24,6 +25,7 @@ interface CellActionProps {
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
+  const params = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const onCopy = (name: string) => {
@@ -34,18 +36,18 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onDelete = async () => {
     try {
       setIsLoading(true);
-      await deleteBranch(data.id).then((data) => {
+      await deletePatient(data.id).then((data) => {
         if (data.error) {
           toast.error(data.error);
         } else {
           toast.success(data.success);
-          router.push(`/admin/dashboard/employee`);
-          window.location.assign("/admin/dashboard/employee");
+          router.push(`/branch/${params.branchId}/patient`);
+          window.location.assign(`/branch/${params.branchId}/patient`);
         }
       });
     } catch (error) {
       toast.error(
-        "Something went wrong while deleting the employee. Please try again later."
+        "Something went wrong while deleting the patient. Please try again later."
       );
       console.log(error);
     } finally {
@@ -71,7 +73,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuItem
-            onClick={() => router.push(`/admin/dashboard/patient/${data.id}`)}
+            onClick={() => router.push(`/branch/${params.branchId}/patient/${data.id}`)}
           >
             <Eye className="w-4 h-4 mr-2" />
             View
