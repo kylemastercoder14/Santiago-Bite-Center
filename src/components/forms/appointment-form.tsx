@@ -3,6 +3,7 @@
 import {
   Billing,
   BillingItem,
+  Inventory,
   Appointment as PrismaAppointment,
   Service,
   User,
@@ -42,7 +43,7 @@ import {
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { createBillingAppointment } from "@/actions/appointment";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 type Appointment = PrismaAppointment & {
   forInsurance?: boolean;
@@ -55,20 +56,30 @@ const AppointmentForm = ({
   services,
   billing,
   billingItems,
+  vaccinations,
 }: {
   initialData: Appointment | null;
   userData: User | null;
   services: Service[];
+  vaccinations: Inventory[];
   billing: Billing | null;
   billingItems: BillingItem[];
 }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const params = useParams();
   const router = useRouter();
   const [appointmentId, setAppointmentId] = useState(initialData?.id ?? "");
   const [userId, setUserId] = useState(initialData?.userId ?? "");
   const [selectedServices, setSelectedServices] = useState<
     { service: Service | null; price: number | null; date: string | null }[]
   >([{ service: null, price: null, date: null }]);
+  const [selectedVaccination, setSelectedVaccination] = useState<
+    {
+      vaccination: Inventory | null;
+      date: string | null;
+      quantity: number | null;
+    }[]
+  >([{ vaccination: null, date: null, quantity: 1 }]);
   const fullName = userData?.firstName + " " + userData?.lastName;
   const form = useForm<z.infer<typeof AppointmentFormSchema>>({
     resolver: zodResolver(AppointmentFormSchema),
@@ -113,20 +124,24 @@ const AppointmentForm = ({
   }, [initialData, fullName, form, billing, services, billingItems]);
 
   const onSubmit = async (values: z.infer<typeof AppointmentFormSchema>) => {
-    console.log("services", selectedServices);
     try {
       setIsLoading(true);
+      const selectedVaccinationData = selectedVaccination.map((v) => ({
+        id: v.vaccination?.id || '',  // Ensure vaccination ID is mapped
+        quantity: v.quantity || 0,  // Ensure quantity is mapped, default to 0 if null
+      }));
       const response = await createBillingAppointment(
         values,
         selectedServices,
         appointmentId,
+        selectedVaccinationData,
         userId
       );
       if (response.error) {
         toast.error(response.error);
       } else {
         toast.success(response.success);
-        router.push(`/admin/dashboard/appointment`);
+        router.push(`/branch/${params.branchId}/appointment`);
       }
     } catch (error) {
       console.error("Error during form submission:", error);
@@ -149,10 +164,39 @@ const AppointmentForm = ({
     }
   };
 
+  const handleVaccinationSelect = (index: number, vaccinationId: string) => {
+    const selected = vaccinations.find(
+      (vaccination) => vaccination.id === vaccinationId
+    );
+    if (selected) {
+      const currentDate = new Date().toISOString().split("T")[0];
+      const updatedVaccinations = [...selectedVaccination];
+      updatedVaccinations[index] = {
+        vaccination: selected,
+        date: currentDate,
+        quantity: selectedVaccination[index].quantity ?? 1,
+      };
+      setSelectedVaccination(updatedVaccinations);
+    }
+  };
+
+  const handleQuantityChange = (index: number, quantity: number) => {
+    const updatedVaccinations = [...selectedVaccination];
+    updatedVaccinations[index].quantity = quantity;
+    setSelectedVaccination(updatedVaccinations);
+  };
+
   const addAnotherService = () => {
     setSelectedServices([
       ...selectedServices,
       { service: null, price: null, date: null },
+    ]);
+  };
+
+  const addAnotherVaccination = () => {
+    setSelectedVaccination([
+      ...selectedVaccination,
+      { vaccination: null, date: null, quantity: 1 },
     ]);
   };
 
@@ -241,6 +285,73 @@ const AppointmentForm = ({
                       onClick={addAnotherService}
                     >
                       Add another service
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              </TableFooter>
+            </Table>
+          </div>
+          <div>
+            <Label>Vaccination</Label>
+            <Table>
+              <TableBody>
+                {selectedVaccination.map((vaccinationData, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <Label className="sr-only">Vaccination</Label>
+                      {vaccinationData.vaccination ? ( // Check if there is an initial service
+                        <Input
+                          value={vaccinationData.vaccination.name} // Show the service name in the input
+                          disabled // Make the input disabled
+                        />
+                      ) : (
+                        <Select
+                          onValueChange={(vaccinationId) =>
+                            handleVaccinationSelect(index, vaccinationId)
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select Vaccination" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {vaccinations?.map((vaccination) => (
+                              <SelectItem
+                                key={vaccination.id}
+                                value={vaccination.id}
+                              >
+                                {vaccination.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      <Label className="sr-only">Quantity</Label>
+                      <Input
+                        value={vaccinationData.quantity ?? 1}
+                        onChange={(e) =>
+                          handleQuantityChange(index, Number(e.target.value))
+                        }
+                        placeholder="Enter quantity"
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Label className="sr-only">Date</Label>
+                      <Input disabled value={vaccinationData.date ?? ""} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TableCell colSpan={3}>
+                    <Button
+                      variant="outline"
+                      type="button"
+                      onClick={addAnotherVaccination}
+                    >
+                      Add another vaccination
                     </Button>
                   </TableCell>
                 </TableRow>

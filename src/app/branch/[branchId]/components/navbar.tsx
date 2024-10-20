@@ -39,6 +39,10 @@ const Navbar = () => {
       label: "Appointments",
     },
     {
+      href: `/branch/${params.branchId}/history`, // Add leading slash
+      label: "History",
+    },
+    {
       href: `/branch/${params.branchId}/inventory`, // Add leading slash
       label: "Inventory",
     },

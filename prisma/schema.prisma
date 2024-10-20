@@ -15,12 +15,12 @@ datasource db {
 
 model User {
   id        String   @id @unique @default(cuid())
-  clerkId   String?   @unique
+  clerkId   String?  @unique
   firstName String
   lastName  String
   email     String   @unique
   password  String?
-  type      String @default("User")
+  type      String   @default("User")
   imageUrl  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -32,6 +32,7 @@ model User {
   Incident    Incident[]
   Appointment Appointment[]
   Billing     Billing[]
+  Vaccination Vaccination[]
 }
 
 model Patient {
@@ -221,4 +222,19 @@ model Inventory {
 
   branchId String
   branch   Branch @relation(fields: [branchId], references: [id])
+
+  Vaccination Vaccination[]
+}
+
+model Vaccination {
+  id        String   @id @unique @default(cuid())
+  quantity  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User @relation(fields: [userId], references: [id])
+
+  inventoryId String
+  inventory   Inventory @relation(fields: [inventoryId], references: [id])
 }

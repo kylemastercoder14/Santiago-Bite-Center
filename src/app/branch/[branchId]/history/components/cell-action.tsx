@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { AppointmentColumn } from "./column";
+import { InventoryColumn } from "./column";
 
 import {
   DropdownMenu,
@@ -13,18 +13,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import AlertModal from "@/components/alert-modal";
 import { deleteBranch } from "@/actions/branch";
 
 interface CellActionProps {
-  data: AppointmentColumn;
+  data: InventoryColumn;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
-  const params = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const onCopy = (name: string) => {
@@ -40,13 +39,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           toast.error(data.error);
         } else {
           toast.success(data.success);
-          router.push(`/admin/dashboard/branch`);
-          window.location.assign("/admin/dashboard/branch");
+          router.push(`/admin/dashboard/employee`);
+          window.location.assign("/admin/dashboard/employee");
         }
       });
     } catch (error) {
       toast.error(
-        "Something went wrong while deleting the branch. Please try again later."
+        "Something went wrong while deleting the employee. Please try again later."
       );
       console.log(error);
     } finally {
@@ -72,7 +71,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
           <DropdownMenuItem
-            onClick={() => router.push(`/branch/${params.branchId}/appointment/${data.id}`)}
+            onClick={() => router.push(`/admin/dashboard/employee/${data.id}`)}
           >
             <Edit className="w-4 h-4 mr-2" />
             Update
