@@ -59,6 +59,7 @@ const PatientProfiling = ({
           />
         );
       case "shoulder":
+      case "shoulders":
         return (
           <Image
             src="/images/profiling-shoulder.png"
