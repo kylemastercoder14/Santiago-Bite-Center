@@ -29,6 +29,7 @@ const AppointmentPage = async ({
   });
 
   const services = await db.service.findMany();
+  const vaccinations = await db.inventory.findMany();
 
   const billingItems = await db.billingItem.findMany({
     where: {
@@ -39,6 +40,8 @@ const AppointmentPage = async ({
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
         <AppointmentForm
+          site="admin"
+          vaccinations={vaccinations}
           userData={user}
           initialData={appointment}
           services={services}

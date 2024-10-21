@@ -57,6 +57,7 @@ const AppointmentForm = ({
   billing,
   billingItems,
   vaccinations,
+  site,
 }: {
   initialData: Appointment | null;
   userData: User | null;
@@ -64,6 +65,7 @@ const AppointmentForm = ({
   vaccinations: Inventory[];
   billing: Billing | null;
   billingItems: BillingItem[];
+  site: string;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const params = useParams();
@@ -127,8 +129,8 @@ const AppointmentForm = ({
     try {
       setIsLoading(true);
       const selectedVaccinationData = selectedVaccination.map((v) => ({
-        id: v.vaccination?.id || '',  // Ensure vaccination ID is mapped
-        quantity: v.quantity || 0,  // Ensure quantity is mapped, default to 0 if null
+        id: v.vaccination?.id || "", // Ensure vaccination ID is mapped
+        quantity: v.quantity || 0, // Ensure quantity is mapped, default to 0 if null
       }));
       const response = await createBillingAppointment(
         values,
@@ -141,7 +143,11 @@ const AppointmentForm = ({
         toast.error(response.error);
       } else {
         toast.success(response.success);
-        router.push(`/branch/${params.branchId}/appointment`);
+        if (site === "admin") {
+          router.push(`/admin/dashboard/appointment`);
+        } else {
+          router.push(`/branch/${params.branchId}/appointment`);
+        }
       }
     } catch (error) {
       console.error("Error during form submission:", error);
