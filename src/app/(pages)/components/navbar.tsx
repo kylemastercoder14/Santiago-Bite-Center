@@ -11,7 +11,9 @@ import Image from "next/image";
 const Navbar = async () => {
   const user = await currentUser();
   let userData = null;
+
   if (user) {
+    // Find the user by clerkId or email to avoid duplicate records
     userData = await db.user.findUnique({
       where: {
         clerkId: user.id,
@@ -19,14 +21,27 @@ const Navbar = async () => {
     });
 
     if (!userData) {
-      userData = await db.user.create({
-        data: {
-          clerkId: user.id,
-          firstName: user.firstName ?? "",
-          lastName: user.lastName ?? "",
+      // Check if a user with the same email already exists
+      const existingUserByEmail = await db.user.findUnique({
+        where: {
           email: user.emailAddresses[0]?.emailAddress ?? "",
         },
       });
+
+      if (!existingUserByEmail) {
+        // Create new user if no existing user is found
+        userData = await db.user.create({
+          data: {
+            clerkId: user.id,
+            firstName: user.firstName ?? "",
+            lastName: user.lastName ?? "",
+            email: user.emailAddresses[0]?.emailAddress ?? "",
+          },
+        });
+      } else {
+        // If a user with the same email exists, use that user data
+        userData = existingUserByEmail;
+      }
     }
   }
 
@@ -99,7 +114,7 @@ const Navbar = async () => {
               <UserButton
                 email={userData.email as string}
                 image={userData.imageUrl as string}
-                name={userData.firstName + "" + userData.lastName}
+                name={userData.firstName + " " + userData.lastName}
               />
             ) : (
               <Link href="/auth/sign-in" className={buttonVariants()}>
